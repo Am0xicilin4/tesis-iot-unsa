@@ -112,3 +112,6 @@ Diseñar, implementar y evaluar un prototipo IoT híbrido basado en microcontrol
 
 [INSERTAR AQUÍ TABLA: Matriz de consistencia de la investigación, relacionando problema, objetivos, preguntas, hipótesis y variables]
 
+
+
+[INSERTAR AQUÍ FLUJOGRAMA DE: Arquitectura general del sistema IoT híbrido...]
