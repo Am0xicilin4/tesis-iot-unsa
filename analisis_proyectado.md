@@ -62,23 +62,48 @@ Las ramas de decisión *quedarán* formuladas de la siguiente manera:
 
 ## 4.6. Modelado con Scikit-learn
 
-La fase de modelado *se ejecutará* en el entorno de Python empleando la biblioteca Scikit-learn, siguiendo un flujo reproducible de seis etapas.
+La fase de modelado *se ejecutará* en el entorno de Python empleando la biblioteca Scikit-learn, siguiendo un flujo reproducible de seis etapas. El *dataset* de entrada *será* el conjunto tabular descrito en el apartado 3.4.5 del capítulo metodológico, integrado con los datos recolectados por los nodos ESP32 y el *broker* MQTT durante la campaña de mediciones.
 
-**Etapa 1 — Partición y preprocesamiento.** El conjunto de datos *será* dividido en entrenamiento y prueba con estratificación cuando la variable objetivo sea discreta; *se aplicarán* codificación de variables categóricas, imputación de ausentes y escalado de variables continuas mediante canalizaciones (*pipelines*) que *se ajustarán* exclusivamente sobre el conjunto de entrenamiento, con el propósito de evitar la fuga de información.
+### 4.6.1. Etapa 1 — Partición y preprocesamiento
 
-**Etapa 2 — Selección de familias de modelos.** *Se entrenarán*, como mínimo, cuatro modelos: una regresión logística como línea base interpretable, un árbol de decisión como modelo de referencia no lineal, un bosque aleatorio como método de ensamble principal y una regresión con regularización Ridge como línea base de la vertiente continua. La selección *no* se hará a priori: *se compararán* con las mismas métricas y el mismo esquema de validación.
+El conjunto de datos *será* dividido en entrenamiento (70%) y prueba (30%), con estratificación cuando la variable objetivo sea discreta y semilla fijada por adelantado —valor 42—. Sobre el conjunto de entrenamiento *se aplicarán*, en orden: imputación de ausentes por mediana, codificación ordinal de las variables categóricas ordenadas —escenario, carga y nivel de QoS—, estandarización de las variables continuas —RSSI, SNR, ruido y distancia— para los algoritmos sensibles a la escala, y verificación del balance de clases en la vertiente de clasificación. Todos los pasos *quedarán* encapsulados en canalizaciones (*pipelines*) que *se ajustarán* exclusivamente sobre el entrenamiento, con el propósito de evitar la fuga de información. El conjunto de prueba *permanecerá* intacto hasta la evaluación final.
 
-**Etapa 3 — Ajuste de hiperparámetros.** *Se buscarán* las configuraciones óptimas mediante validación cruzada en *k* pliegues con búsqueda en malla o aleatorizada —número y profundidad de estimadores, mínimo de muestras por hoja, parámetro de regularización—, asegurando que la partición de prueba *permanezca* intacta durante toda la búsqueda.
+### 4.6.2. Etapa 2 — Selección de familias de modelos
 
-**Etapa 4 — Evaluación.** Sobre el conjunto de prueba *se calcularán* exactitud, precisión, sensibilidad, especificidad, puntaje *F*1, área bajo la curva ROC y matriz de confusión para la clasificación; y error absoluto medio, raíz del error cuadrático medio y coeficiente de determinación para la regresión. Los resultados *se reportarán* con sus intervalos de confianza obtenidos por remuestreo.
+*Se entrenarán*, como mínimo, cuatro modelos: una regresión logística como línea base interpretable, un árbol de decisión como modelo de referencia no lineal, un bosque aleatorio como método de ensamble principal y una regresión Ridge como línea base de la vertiente continua. La selección *no* se hará a priori: *se compararán* con las mismas métricas y el mismo esquema de validación.
 
-**Etapa 5 — Interpretabilidad.** *Se obtendrán* la importancia de atributos del bosque aleatorio y los coeficientes de la regresión regularizada; *se contrastarán* ambos criterios; y *se verificará* si los predictores de radiofrecuencia y de configuración —RSSI, SNR, distancia, carga y nivel de QoS— figuran entre los más relevantes. Este paso *será* el que vincule el modelo con el marco físico de la investigación: un modelo con desempeño elevado pero cuyos predictores dominantes *sean* ajenos al problema planteado *será* considerado insuficiente para los fines de la tesis.
+[INSERTAR AQUÍ TABLA: Comparación de modelos entrenados — algoritmo, tipo, hiperparámetros ajustados, exactitud/RMSE en validación cruzada y tiempo de entrenamiento]
 
-**Etapa 6 — Comparación y selección.** *Se elegirá* el modelo que ofrezca el mejor compromiso entre desempeño, estabilidad entre pliegues e interpretabilidad, y *se documentarán* las razones de la selección. *Se conservarán* el modelo serializado, la semilla aleatoria y la configuración final, de modo que su evaluación *pueda* repetirse de forma idéntica.
+### 4.6.3. Etapa 3 — Ajuste de hiperparámetros
+
+*Se buscarán* las configuraciones óptimas mediante validación cruzada en 10 pliegues con búsqueda en malla o aleatorizada —número y profundidad de estimadores, mínimo de muestras por hoja, parámetro de regularización—, asegurando que el conjunto de prueba *permanezca* intacto durante toda la búsqueda.
+
+### 4.6.4. Etapa 4 — Evaluación sobre el conjunto de prueba
+
+Una vez elegido el modelo ganador, *se calcularán* las métricas definitivas sobre el conjunto de prueba reservado:
+
+- **Clasificación.** *Se obtendrán* exactitud, precisión, sensibilidad, especificidad, puntaje *F*1, área bajo la curva ROC y matriz de confusión. La matriz de confusión *se presentará* como tabla con los cuatro valores —verdaderos positivos, verdaderos negativos, falsos positivos y falsos negativos—, de modo que los tipos de error *puedan* interpretarse en términos operativos: un falso positivo implica alertar de degradación cuando el enlace funciona bien; un falso negativo implica no detectar una degradación real.
+- **Regresión.** *Se calcularán* el error absoluto medio —MAE—, la raíz del error cuadrático medio —RMSE—, el error porcentual absoluto medio —MAPE— y el coeficiente de determinación —R²—. El RMSE *se expresará* en milisegundos —misma unidad que la variable objetivo—, de modo que su valor *represente* el error típico de predicción de manera directamente interpretable.
+
+Los resultados *se reportarán* con sus intervalos de confianza obtenidos por remuestreo —*bootstrap* con 1.000 iteraciones—.
+
+[INSERTAR AQUÍ TABLA: Métricas de evaluación del modelo ganador — clasificación (exactitud, precisión, sensibilidad, F1, AUC-ROC) y regresión (MAE, RMSE, MAPE, R²) con intervalos de confianza]
+
+[INSERTAR AQUÍ TABLA: Matriz de confusión del modelo de clasificación — verdaderos positivos, verdaderos negativos, falsos positivos y falsos negativos con sus porcentajes]
+
+### 4.6.5. Etapa 5 — Interpretabilidad
+
+*Se obtendrán* la importancia de atributos del bosque aleatorio y los coeficientes de la regresión regularizada; *se contrastarán* ambos criterios; y *se verificará* si los predictores de radiofrecuencia y de configuración —RSSI, SNR, distancia, carga y nivel de QoS— figuran entre los más relevantes. Este paso *será* el que vincule el modelo con el marco físico de la investigación: un modelo con desempeño elevado pero cuyos predictores dominantes *sean* ajenos al problema planteado *será* considerado insuficiente para los fines de la tesis.
+
+[INSERTAR AQUÍ GRÁFICO: Importancia de predictores del modelo — barras horizontales ordenadas por relevancia, con RSSI, SNR, distancia, carga, QoS y escenario]
+
+### 4.6.6. Etapa 6 — Comparación y selección final
+
+*Se elegirá* el modelo que ofrezca el mejor compromiso entre desempeño, estabilidad entre pliegues e interpretabilidad, y *se documentarán* las razones de la selección. *Se conservarán* el modelo serializado, la semilla aleatoria y la configuración final, de modo que su evaluación *pueda* repetirse de forma idéntica.
+
+[INSERTAR AQUÍ FLUJOGRAMA DEL PIPELINE DE MACHINE LEARNING: Recolección — nodos ESP32 y broker MQTT, Preprocesamiento — limpieza, codificación y escalado, División — 70/30 estratificada, Entrenamiento — validación cruzada en 10 pliegues, Evaluación — conjunto de prueba y Predicción — modelo serializado]
 
 **Ramas condicionales.** Si el modelo seleccionado alcanza la exactitud y el puntaje *F*1 del 85% en validación cruzada y en el conjunto de prueba, *se concluirá* que la correlación entre variables físicas de radiofrecuencia y variables dinámicas de red *es* modelable con precisión suficiente para fines de evaluación de QoS, y *se aceptará* la hipótesis en esa dimensión. Si el desempeño *resulta* inferior, *se analizarán* las causas técnicas —predictores insuficientes, ruido de medición, efecto de factores no controlados, tamaño muestral, desbalance de clases—, *se aplicarán* los ajustes correspondientes y, en última instancia, *se reportará* el desempeño alcanzado sin forzar el cumplimiento. Si la importancia de predictores *mostrara* que el nivel de QoS o la carga dominan al RSSI, *se concluirá* que el comportamiento de la red interior en las condiciones ensayadas está gobernado más por la capa de aplicación y de acceso que por la atenuación, hallazgo que *sería* coherente con la hipótesis de conflicto estructural entre capas planteada en la introducción.
-
-[INSERTAR AQUÍ FLUJOGRAMA DE: Pipeline de Machine Learning con Scikit-learn — 6 etapas: partición, selección de familias, ajuste de hiperparámetros, evaluación, interpretabilidad y selección final]
 
 ## 4.7. Visualización y Tableros en Power BI
 

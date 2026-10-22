@@ -1,0 +1,27 @@
+\usepackage{newunicodechar}
+\newunicodechar{₀}{\textsubscript{0}}
+\newunicodechar{₁}{\textsubscript{1}}
+\newunicodechar{₂}{\textsubscript{2}}
+\newunicodechar{₃}{\textsubscript{3}}
+\newunicodechar{ᵢ}{\textsubscript{i}}
+\newunicodechar{ⱼ}{\textsubscript{j}}
+\newunicodechar{ₖ}{\textsubscript{k}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{μ}{\ensuremath{\mu}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{γ}{\ensuremath{\gamma}}
+\newunicodechar{λ}{\ensuremath{\lambda}}
+% APA 7: texto alineado a la izquierda (flush left, ragged right)
+\usepackage{ragged2e}
+\raggedright
+\setlength{\emergencystretch}{3em}
+% APA 7: interlineado doble
+\usepackage{setspace}
+\doublespacing
+% APA 7: sangría de 0.5 pulgadas en primera línea de párrafo
+\setlength{\parindent}{0.5in}
+\setlength{\parskip}{0pt}
+% APA 7: sangría francesa (hangindent) para las entradas de referencias
+\newcommand{\hangref}{\par\parindent=0pt\leavevmode\hangindent=0.5in\hangafter=1}

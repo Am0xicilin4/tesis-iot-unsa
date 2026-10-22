@@ -1,0 +1,2919 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  12pt,
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+  \setmainfont[]{Times New Roman}
+  \setmonofont[]{Consolas}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{setspace}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\usepackage{caption}
+\captionsetup[table]{skip=6pt}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{newunicodechar}
+\newunicodechar{₀}{\textsubscript{0}}
+\newunicodechar{₁}{\textsubscript{1}}
+\newunicodechar{₂}{\textsubscript{2}}
+\newunicodechar{₃}{\textsubscript{3}}
+\newunicodechar{ᵢ}{\textsubscript{i}}
+\newunicodechar{ⱼ}{\textsubscript{j}}
+\newunicodechar{ₖ}{\textsubscript{k}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{μ}{\ensuremath{\mu}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{γ}{\ensuremath{\gamma}}
+\newunicodechar{λ}{\ensuremath{\lambda}}
+% APA 7: texto alineado a la izquierda (flush left, ragged right)
+\usepackage{ragged2e}
+\raggedright
+\setlength{\emergencystretch}{3em}
+% APA 7: interlineado doble
+\usepackage{setspace}
+\doublespacing
+% APA 7: sangría de 0.5 pulgadas en primera línea de párrafo
+\setlength{\parindent}{0.5in}
+\setlength{\parskip}{0pt}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\setstretch{2}
+\section{1. INTRODUCCIÓN}\label{introducciuxf3n}
+
+\subsection{1.1. Realidad Problemática}\label{realidad-problemuxe1tica}
+
+La proliferación masiva de dispositivos de Internet de las Cosas (IoT)
+en entornos interiores —edificios inteligentes, plantas industriales,
+campus universitarios y instalaciones sanitarias— ha generado un
+escenario de alta densidad de nodos inalámbricos que compiten por
+recursos de comunicaciones finitos y, en muchos casos, degradados por
+las condiciones del canal. La transmisión de señales de radiofrecuencia
+en interiores se caracteriza por fenómenos físicos complejos como la
+multipropagación, el desvanecimiento selectivo en frecuencia, la
+atenuación por materiales de construcción y la interferencia co-canal,
+los cuales distorsionan de manera significativa el enlace de
+comunicaciones y elevan la tasa de error a nivel físico. Este
+comportamiento del medio de propagación impone un límite teórico y
+práctico sobre la calidad de servicio (QoS) que puede ofrecerse a las
+aplicaciones críticas IoT, tales como monitoreo de procesos, control de
+seguridad y telemedicina, que requieren latencia acotada, confiabilidad
+elevada y disponibilidad continua.
+
+En paralelo, la congestión dinámica del medio se intensifica a medida
+que la densidad de nodos aumenta. Los protocolos de acceso al medio de
+bajo consumo, ampliamente adoptados en el ecosistema IoT (por ejemplo,
+IEEE 802.15.4/Zigbee, LoRaWAN en variantes indoor y redes mesh sobre
+802.11), operan en bandas de espectro compartidas y no licenciadas
+(ISM), donde la probabilidad de colisión de tramas crece de forma no
+lineal con el número de emisores activos por unidad de área. El problema
+se agrava por el fenómeno del \emph{hidden node}, las variaciones
+temporales del tráfico (patrones estocásticos de generación de paquetes)
+y la ausencia de un coordinador central capaz de reasignar recursos de
+forma óptima en tiempo real. De este modo, se establece un conflicto
+estructural entre la capa física y la capa MAC: mientras la propagación
+multipath reduce la robustez del enlace, la congestión dinámica degrada
+la eficiencia espectral y eleva la energía disipada por reintentos,
+configurando un círculo vicioso de rendimiento que limita el escalado
+sostenible de redes IoT densas.
+
+Las soluciones convencionales para mitigar este conflicto se han basado
+históricamente en infraestructuras de alto costo: despliegue de sistemas
+DAS (\emph{Distributed Antenna Systems}) con fibra óptica hasta cada
+punto de acceso, estaciones base de macrocelda reforzadas, gateways
+industriales certificados con antenas direccionales, o la adquisición de
+espectro licenciado con garantías regulatorias. Si bien estas
+arquitecturas demostraron eficacia en contextos de telecomunicaciones
+celulares tradicionales, resultan económicamente inviables para la gran
+mayoría de las aplicaciones IoT de interiores, cuyo modelo de negocio
+exige costos de despliegue por nodo en el rango de unidades a decenas de
+dólares, consumo energético compatible con baterías de larga duración y
+administración descentralizada sin depender de personal especializado
+permanente. La inversión en infraestructura centralizada además
+concentra un punto único de falla, contradiciendo los principios de
+resiliencia que la propia arquitectura IoT promete.
+
+En consecuencia, existe una brecha tecnológica significativa entre las
+soluciones disponibles y las necesidades reales de las redes IoT
+interiores: se requieren mecanismos adaptativos, de bajo costo y
+distribuidos, capaces de compensar simultáneamente los efectos de la
+propagación física y la congestión dinámica del medio. Abordar esta
+problemática demanda un enfoque que integre el modelado del canal indoor
+con estrategias de gestión inteligente del espectro y del acceso al
+medio, orientado a maximizar la eficiencia de la red sin recurrir a
+infraestructura capital intensiva. La presente investigación se enmarca
+en esta necesidad, proponiendo soluciones viables desde el punto de
+vista técnico y económico para la próxima generación de redes IoT densas
+en entornos interiores.
+
+{[}INSERTAR AQUÍ TABLA: Comparativa de soluciones al conflicto
+físico–MAC en IoT interiores — infraestructura centralizada de alto
+costo vs.~propuesta distribuida de bajo costo{]}
+
+\subsection{1.2. Preguntas de
+Investigación}\label{preguntas-de-investigaciuxf3n}
+
+La realidad problemática descrita evidencia que la calidad de servicio
+(QoS) de una red inalámbrica interior no es una propiedad atribuible a
+un solo componente del sistema, sino un resultado \emph{emergente} de la
+interacción entre las condiciones físicas del canal (atenuación,
+multipropagación, interferencia) y el comportamiento dinámico de la pila
+de protocolos (acceso al medio, colisiones, reintentos, sobrecarga de
+confirmaciones). Preguntar por el QoS en interiores equivale, por tanto,
+a preguntar por una relación funcional entre conjuntos de variables de
+naturaleza distinta —físicas y de red— cuya dependencia raramente es
+lineal y que, en consecuencia, exige un instrumento de medición capaz de
+registrar ambas familias de variables de forma simultánea, sincronizada
+y reproducible. Ese instrumento es el prototipo IoT híbrido que se
+propone diseñar: nodos de bajo costo basados en ESP32 que transmiten por
+Wi-Fi IEEE 802.11 publicaciones MQTT y que, al mismo tiempo, reportan
+los indicadores de radiofrecuencia del enlace.
+
+En tal virtud, la formulación de las preguntas de investigación se
+estructura como un sistema jerárquico y cerrado: una pregunta general
+que encuadra el problema sistémico y cuatro preguntas específicas que,
+en correspondencia con los cuatro eslabones de la cadena experimental
+(canal de propagación, comportamiento del QoS, correlación
+estadístico-aprendizaje y viabilidad del instrumento), permiten
+desagregar la respuesta en problemas de ingeniería abordables,
+verificables y compatibles con el diseño factorial 3×3×3 y con el umbral
+de desempeño del 85\% que se asume como criterio de éxito.
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Sistema jerárquico de preguntas de
+investigación y su articulación con la cadena experimental (PE1 canal →
+PE2 red → PE3 Machine Learning → PE4 viabilidad){]}
+
+\subsubsection{1.2.1. Pregunta General}\label{pregunta-general}
+
+\textbf{¿En qué medida un prototipo IoT híbrido basado en
+microcontroladores ESP32, enlace Wi-Fi IEEE 802.11 y publicaciones MQTT
+permite evaluar la calidad de servicio de las redes inalámbricas
+interiores mediante la correlación de variables físicas de
+radiofrecuencia con variables dinámicas de red a través de técnicas de
+Machine Learning, y en qué forma dicho instrumento permite verificar de
+manera reproducible el umbral de desempeño del 85\% fijado como criterio
+de éxito?}
+
+\emph{Trasfondo de ingeniería.} La pregunta se justifica en la
+naturaleza \emph{transversal} (cross-layer) del fenómeno que se pretende
+medir. En telecomunicaciones, la optimización o la evaluación de una
+sola capa presenta rendimientos decrecientes cuando el cuello de botella
+emerge de la interacción entre capas: ninguna métrica de red describe
+por sí sola la degradación causada por un canal con desvanecimiento
+selectivo, y ninguna medición de potencia de recepción anticipa por sí
+sola la latencia generada por las colisiones del mecanismo CSMA/CA. Para
+caracterizar el QoS es imprescindible observar, en la misma escala de
+tiempo, los indicadores físicos (RSSI, SNR, ruido de fondo) y los
+indicadores de red (latencia extremo a extremo, jitter, razón de entrega
+de tramas, pérdida de paquetes y buen uso). El prototipo propuesto se
+convierte, así, en el \emph{instrumento de medición} que hace observable
+esa relación, y la pregunta general encuadra la investigación como un
+problema de \emph{ingeniería de sistemas de comunicaciones y de
+instrumentación}, donde la variable de diseño no es un componente
+aislado, sino el conjunto hardware–software–algoritmo que gobierna la
+adquisición, el tratamiento y la interpretación conjunta de ambos tipos
+de señales bajo restricciones económicas explícitas de despliegue
+masivo.
+
+\subsubsection{1.2.2. Preguntas
+Específicas}\label{preguntas-especuxedficas}
+
+\paragraph{Pregunta Específica 1
+(PE1)}\label{pregunta-especuxedfica-1-pe1}
+
+\textbf{¿Qué modelo de propagación en interiores, calibrado para la
+banda ISM de 2,4 GHz y las geometrías típicas de instalaciones densas,
+describe con suficiente fidelidad las variables físicas de
+radiofrecuencia —RSSI, SNR, potencia de recepción y ruido de fondo— que
+el prototipo ESP32 es capaz de estimar en campo, y qué relación guardan
+dichas variables con la atenuación por materiales de construcción y con
+los mecanismos de multipropagación presentes en el escenario de
+medición?}
+
+\emph{Trasfondo de ingeniería.} Esta pregunta sitúa la investigación en
+el dominio de la \emph{propagación de radiofrecuencia y caracterización
+de canales}. El canal de comunicación indoor se modela, según la
+complejidad requerida, mediante modelos deterministas (\emph{ray
+tracing} de alta frecuencia), semi-empíricos (modelos de pérdida de
+distancia con exponente de atenuación ajustable, el modelo de la
+Recomendación ITU-R P.1238 de la forma L = 20 log₁₀ f + N log₁₀ d +
+Lf(n) − 28 dB, o modelos de múltiples paredes tipo Motley-Keenan) o
+estocásticos (distribuciones Rayleigh, Rician o Nakagami-\emph{m} para
+el desvanecimiento de amplitud, con desvanecimiento por sombra de
+distribución log-normal). Cada modelo implica una relación distinta
+entre coste computacional y fidelidad, y su elección determina la
+validez de todas las evaluaciones posteriores: sin una caracterización
+correcta del exponente de pérdida de distancia, del desvanecimiento por
+sombra y del \emph{delay spread} propio del escenario, cualquier
+conclusión sobre QoS se formularía sobre una abstracción irreal del
+medio y los resultados no serían trasladables a un despliegue físico
+distinto. Adicionalmente, la pregunta exige identificar los parámetros
+\emph{medibles en campo} con el hardware de bajo costo disponible,
+porque condiciona toda la viabilidad del prototipo: un ESP32 reporta el
+RSSI desde el controlador de interfaz Wi-Fi y permite estimar el ruido
+de fondo y la relación señal-ruido, pero no la matriz de canal compleja
+completa. En consecuencia, PE1 debe resolver dos problemas de ingeniería
+concretos: (i) ajustar por mínimos cuadrados los parámetros del modelo
+de pérdida de distancia a partir de la campaña de medición propia,
+verificando su bondad de ajuste mediante el error medio cuadrático y el
+coeficiente de determinación; y (ii) establecer el rango de operación
+del instrumento en el cual el RSSI reportado conserva monotonicidad
+respecto de la distancia, dada la conocida no linealidad y el efecto de
+las reflexiones constructivas y destructivas de la multipropagación. En
+síntesis, PE1 establece el \emph{cimiento empírico-matemático} sobre el
+cual se construye la familia de variables explicativas de todo el
+análisis posterior.
+
+{[}INSERTAR AQUÍ TABLA: Familias de modelos de propagación en interiores
+— deterministas, semi-empíricos (ITU-R P.1238, Motley-Keenan) y
+estocásticos (Rayleigh, Rician, Nakagami-m) — y su adecuación al
+instrumento ESP32{]}
+
+\paragraph{Pregunta Específica 2
+(PE2)}\label{pregunta-especuxedfica-2-pe2}
+
+\textbf{¿Cómo se comportan las métricas de calidad de servicio —latencia
+extremo a extremo, jitter, razón de entrega de tramas (PDR), pérdida de
+paquetes y buen uso— de un enlace MQTT sobre Wi-Fi IEEE 802.11 en
+interiores, al variar de forma controlada el escenario de propagación,
+la carga de ofrecimiento y el nivel de QoS del protocolo, y en qué
+combinaciones del diseño factorial experimental 3×3×3 se alcanza o no el
+umbral del 85\% fijado como criterio de éxito?}
+
+\emph{Trasfondo de ingeniería.} PE2 corresponde al campo de la
+\emph{evaluaración experimental de protocolos y de la ingeniería de
+calidad de servicio}. La definición de QoS de la Recomendación ITU-T
+E.800 —conjunto de efectos de un servicio que condicionan la
+satisfacción del usuario— debe operacionalizarse en magnitudes medibles
+antes de poder verificarse: la latencia extremo a extremo (con la
+referencia de 150 ms de la Recomendación ITU-T G.114 como límite
+prácticamente imperceptible para servicios interactivos), la variación
+de retardo o jitter, la razón de entrega de tramas, el porcentaje de
+pérdida y el buen uso en bits por segundo. Sobre el plano de enlace,
+Wi-Fi IEEE 802.11 administra el medio mediante DCF/CSMA/CA con retroceso
+exponencial binario y ventana de contienda, mecanismo cuyo
+comportamiento se modela con cadenas de Markov —el paradigma clásico del
+modelo de Bianchi— y que degrada de forma no lineal con la carga y con
+las interferencias co-canal y de canal adyacente propias de la banda ISM
+de 2,4 GHz, compartida con Bluetooth, Zigbee y equipos vecinos no
+coordinados. Sobre el plano de aplicación, MQTT introduce una dimensión
+adicional que suele subestimarse: sus tres niveles de servicio (QoS 0
+sin confirmación, QoS 1 con confirmación de recepción y QoS 2 con ciclo
+completo de cuatro manos) intercambian confiabilidad por sobrecarga de
+tráfico y por latencia, de modo que el nivel elegido modifica
+simultáneamente el tiempo de entrega y la probabilidad de duplicación o
+pérdida. Finalmente, la pregunta incorpora el \emph{diseño factorial} no
+como un recurso estadístico ornamental, sino como la única forma de
+estimar simultáneamente los \emph{efectos principales} de los tres
+factores y sus \emph{interacciones} —por ejemplo, si el efecto de la
+carga de tráfico sobre la latencia depende del escenario de propagación
+o del nivel de QoS—, que es precisamente la estructura de dependencia
+que la realidad problemática anticipa. El umbral del 85\% se introduce
+aquí como \emph{criterio de éxito metodológico operacionalizable}:
+habilita transformar un juicio cualitativo (“la red es de buena
+calidad”) en una decisión verificable celda por celda dentro de la
+matriz experimental.
+
+{[}INSERTAR AQUÍ TABLA: Comparativa de los niveles de servicio MQTT (QoS
+0/1/2) — confirmación, latencia, sobrecarga, confiabilidad y factor
+experimental asociado{]}
+
+\paragraph{Pregunta Específica 3
+(PE3)}\label{pregunta-especuxedfica-3-pe3}
+
+\textbf{¿Qué familia y configuración de modelo de Machine Learning
+—implementada preferentemente con Scikit-learn sobre regresión lineal
+regularizada, árboles de decisión y ensambles tipo \emph{random forest}—
+establece la relación más robusta entre las variables físicas de
+radiofrecuencia y las variables dinámicas de red, con qué exactitud
+clasificaría el estado de QoS respecto del umbral del 85\% y qué
+importancia relativa tendrían los predictores en la explicación de dicho
+estado?}
+
+\emph{Trasfondo de ingeniería.} PE3 se inscribe en el área de
+\emph{aprendizaje automático aplicado a redes de comunicaciones}. El
+problema puede formularse como aprendizaje supervisado de dos tipos: (i)
+una tarea de \emph{clasificación}, cuya variable objetivo sería el
+cumplimiento o incumplimiento del umbral del 85\% en las métricas de
+QoS; y (ii) una tarea de \emph{regresión}, cuyo objetivo sería estimar
+magnitudes continuas como la latencia o el jitter a partir de los
+indicadores físicos y de configuración. La ingeniería de este problema
+radica en que la relación entre RSSI y rendimiento no es monotónica ni
+aditiva: conviven efectos de umbral (bajo cierto nivel de señal, la tasa
+de error se desborda), efectos de saturación (por encima de un nivel
+suficiente, mejorar la potencia no reduce la latencia) e interacciones
+entre la carga y la calidad del enlace; los modelos lineales simples
+capturan la tendencia general, mientras que los ensambles de árboles
+capturan los efectos de umbral y las interacciones sin requerir
+especificación previa de la forma funcional. La evaluación debe regirse
+por buenas prácticas de validación: partición estratificada entre
+entrenamiento y prueba, validación cruzada en \emph{k} pliegues,
+búsqueda de hiperparámetros sin contaminar la partición de prueba, y
+reporte conjunto de métricas (exactitud, precisión, sensibilidad,
+\emph{F}1, área bajo la curva ROC, y MAE/RMSE/R² para la regresión) para
+detectar tanto el sobreajuste como el sesgo por desequilibrio de clases.
+Un requisito adicional, propio de la ingeniería aplicada, es la
+\emph{interpretabilidad}: un modelo cuyos predictores no pueden leerse
+en términos físicos (por ejemplo, que el RSSI o el nivel de QoS no
+aparezcan entre los atributos más importantes) sería de escaso valor
+para el gestor de red, aun cuando su exactitud sea elevada. PE3
+convierte, así, el conjunto de mediciones en un \emph{modelo utilizable}
+de correlación entre las dos familias de variables.
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Esquema del aprendizaje supervisado
+previsto — clasificación del umbral del 85\% y regresión de
+latencia/jitter con Scikit-learn{]}
+
+\paragraph{Pregunta Específica 4
+(PE4)}\label{pregunta-especuxedfica-4-pe4}
+
+\textbf{¿Es técnica y económicamente viable, y útil desde el punto de
+vista de la operación, un prototipo IoT híbrido de bajo costo
+—instrumentado con tableros de Power BI para la comunicación del estado
+de QoS— que ofrezca una evaluación reproducible de la calidad de
+servicio de la red interior, manteniendo el costo por nodo y la
+complejidad de operación dentro de los rangos compatibles con
+despliegues masivos y con la gestión cotidiana de instalaciones reales?}
+
+\emph{Trasfondo de ingeniería.} PE4 cierra el sistema de preguntas con
+la dimensión de \emph{ingeniería de sistemas y economía de las
+telecomunicaciones}. La validación de un instrumento de medición no se
+limita a demostrar que produce estimaciones consistentes en un banco de
+pruebas, sino que exige una metodología reproducible y un valor de uso
+demostrable: definición de escenarios de referencia (aulas, oficinas,
+pasillos y salas técnicas), de KPIs comparables (PDR, latencia
+percentil-95, jitter, buenuso, exactitud del modelo), de líneas base
+técnicas (el mismo enlace sin instrumentación cruzada y las
+arquitecturas centralizadas descritas en la realidad problemática) y de
+un nivel de madurez tecnológica explícito. La simulación permite
+explorar el espacio de diseño a escala, pero la ingeniería de
+telecomunicaciones reconoce la brecha entre simulación y despliegue
+real; por ello la pregunta incorpora el \emph{prototipo físico} como
+etapa de verificación obligatoria. En paralelo, la viabilidad económica
+se trata como variable de diseño: el CAPEX por nodo, el consumo de
+energía, la ausencia de infraestructura centralizada y la dependencia de
+componentes comerciales estándar deben cuantificarse para demostrar que
+la solución se sitúa en la franja de costo exigida por el mercado IoT.
+Finalmente, la dimensión de \emph{utilidad} se concreta en la capa de
+visualización: los tableros de Power BI traducen las salidas del
+análisis estadístico y del modelo de Machine Learning en indicadores
+accionables —semáforos de cumplimiento del umbral, tendencias por
+escenario y alertas de degradación—, de modo que el resultado no quede
+confinado en el informe académico, sino que pueda sostener decisiones de
+dimensionamiento, reubicación de puntos de acceso o ajuste de parámetros
+del protocolo. En conjunto, PE4 convierte el resultado académico en una
+\emph{propuesta de solución con grado de madurez tecnológica} explícito,
+requisito indispensable de la ingeniería aplicada.
+
+{[}INSERTAR AQUÍ IMAGEN TÉCNICA: Esquema de los tableros de Power BI —
+tablero de estado con semáforos, tablero de diagnóstico y tablero
+predictivo{]}
+
+\subsubsection{Síntesis Integradora}\label{suxedntesis-integradora}
+
+Las cuatro preguntas específicas no son compartimentos estancos, sino
+eslabones de una cadena experimental coherente: PE1 (canal) suministra
+la familia de variables físicas de radiofrecuencia; PE2 (protocolo y
+red) produce la familia de variables dinámicas y define el umbral de
+éxito dentro de una matriz factorial 3×3×3; PE3 (Machine Learning)
+establece y valida la relación estadístico-aprendizaje entre ambas
+familias; y PE4 (viabilidad) integra, instrumenta y somete a validación
+técnica, económica y de uso el resultado sistémico. Responderlas en
+conjunto permite, precisamente, dar respuesta a la pregunta general
+sobre la capacidad de un prototipo IoT híbrido de bajo costo para
+evaluar y comunicar de forma reproducible la calidad de servicio de las
+redes inalámbricas interiores.
+
+\subsection{1.3. Justificación}\label{justificaciuxf3n}
+
+\subsubsection{1.3.1. Presentación del tema y del proceso
+comunicativo}\label{presentaciuxf3n-del-tema-y-del-proceso-comunicativo}
+
+La presente investigación propone el diseño, la implementación y la
+evaluación de un prototipo IoT híbrido para la medición de la calidad de
+servicio en redes inalámbricas interiores. El proceso comunicativo
+objeto de estudio se circunscribe a una cadena específica: el nodo
+sensor–actuador basado en ESP32 adquiere e incluye en cada publicación
+tanto el estado medido como los indicadores de radiofrecuencia del
+enlace; la trama viaja por el medio compartido conforme al protocolo
+Wi-Fi IEEE 802.11 (MAC DCF/CSMA/CA y PHY 802.11 b/g/n) hasta el punto de
+acceso; el \emph{broker} MQTT recibe, enruta y confirma las
+publicaciones según el nivel de QoS contratado; el servidor de
+adquisición registra las series temporales sincronizadas de variables
+físicas y de red; y el canal de análisis —estadística descriptiva e
+inferencial, modelos de Machine Learning y tableros de Power BI—
+transforma esos registros en conocimiento sobre el desempeño del enlace.
+Los actores involucrados son, por tanto, identificables: los
+desarrolladores y fabricantes de dispositivos IoT (que requieren
+criterios objetivos de desempeño), los administradores y gestores de
+redes de área local (que necesitan diagnósticos accionables sobre
+cobertura y congestión), la comunidad académica de telecomunicaciones
+(que demanda protocolos experimentales replicables) y los usuarios
+finales de instalaciones interiores (educativas, asistenciales,
+industriales y comerciales), cuya experiencia de calidad depende
+directamente del comportamiento del enlace.
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Arquitectura general del sistema IoT
+híbrido, mostrando la relación entre los nodos ESP32, el canal Wi-Fi, el
+broker MQTT y la capa de análisis{]}
+
+\subsubsection{1.3.2. Enfoques de la investigación y razones de su
+elección}\label{enfoques-de-la-investigaciuxf3n-y-razones-de-su-elecciuxf3n}
+
+La elección del tema responde a la convergencia de cuatro evidencias: el
+crecimiento sostenido de la densidad de dispositivos IoT en interiores;
+la concentración de las bandas ISM no licenciadas como espacio
+compartido y congestionado; la brecha entre las soluciones de evaluación
+de QoS de alto costo (analizadores de espectro, sondas comerciales,
+plataformas de gestión empresarial) y la realidad económica de los
+despliegues masivos; y la madurez suficiente de las técnicas de
+aprendizaje automático de código abierto para extraer modelos
+interpretables a partir de series temporales de sensores. Sobre esa
+base, la investigación se aproxima a su objeto de estudio mediante los
+siguientes enfoques:
+
+\textbf{a) Enfoque teórico-científico.} Se busca producir conocimiento
+verificable sobre la relación funcional entre variables físicas de
+radiofrecuencia y variables dinámicas de red. En el plano conceptual, se
+articulan marcos de referencia institucionales —la Recomendación ITU-T
+E.800 para la definición de calidad de servicio, las Recomendaciones
+ITU-R P.1238 e ITU-T G.114/Y.1540 para la propagación y el desempeño de
+transferencia de paquetes, y el estándar IEEE 802.11 para el acceso al
+medio— con el paradigma del aprendizaje automático supervisado. El
+aporte teórico consiste en la formalización de un modelo de correlación
+entre ambas familias de variables, comprobado empíricamente y
+documentado con indicadores de ajuste e importancia de predictores, lo
+que amplía el cuerpo de conocimiento sobre caracterización de QoS en
+redes inalámbricas de interiores.
+
+\textbf{b) Enfoque tecnológico.} La respuesta al problema se materializa
+en un artefacto: un prototipo hardware–software de bajo costo,
+replicable con componentes comerciales disponibles (microcontroladores
+ESP32, punto de acceso Wi-Fi, \emph{broker} MQTT, base de datos y capa
+de análisis). Este enfoque se elige porque la problemática descrita es
+de naturaleza aplicada: la brecha identificada no se cierra con un
+modelo analítico, sino con un instrumento que pueda instalarse, operarse
+y repetirse en instalaciones reales. El prototipo incorpora desde su
+diseño la instrumentación de las variables físicas, condición
+indispensable para que la evaluación de QoS sea \emph{cross-layer} y no
+una simple medición de rendimiento de aplicación.
+
+\textbf{c) Enfoque metodológico.} Se opta por un diseño experimental de
+carácter cuantitativo, estructurado como un plan factorial completo
+3×3×3 con factores de propagación, de carga de tráfico y de nivel de
+servicio MQTT, complementado con un plan de contingencia explícito de
+cinco pasos para el tratamiento eventual de resultados que no alcancen
+el umbral del 85\%. Este enfoque se justifica por tres razones: permite
+estimar efectos principales e interacciones en una sola campaña de
+medición; garantiza la reproducibilidad, al hacer públicos los niveles,
+las réplicas y los criterios de éxito antes de la recolección; y evita
+el sesgo de interpretación \emph{a posteriori}, al fijar por adelantado
+tanto el criterio de éxito como el procedimiento de respuesta ante su
+incumplimiento.
+
+\textbf{d) Enfoque económico y social.} La investigación se delimita
+explícitamente en la franja de costo de los despliegues IoT masivos: sin
+infraestructura centralizada especializada, sin espectro licenciado y
+con componentes de costo reducido. Su justificación social se deriva de
+las aplicaciones que habilita: el dimensionamiento racional de redes en
+aulas y laboratorios, la detección temprana de degradación en
+instalaciones sanitarias y de seguridad, y la dotación de herramientas
+de diagnóstico a instituciones que carecen de equipos de medición
+especializados. Desde el punto de vista académico, se espera como aporte
+la publicación de un protocolo experimental replicable y del conjunto de
+datos estructurado resultante, disponible para trabajos posteriores de
+validación y comparación.
+
+\subsubsection{1.3.3. Justificación de la pertinencia del umbral del
+85\% y de la
+validación}\label{justificaciuxf3n-de-la-pertinencia-del-umbral-del-85-y-de-la-validaciuxf3n}
+
+El umbral del 85\% se asume como criterio de éxito metodológico por su
+carácter de frontera operacional verificable: permite pronunciarse, para
+cada celda del diseño factorial y para el modelo predictivo, sobre si el
+desempeño observado se considera aceptable, y habilita la activación de
+un plan de contingencia de cinco pasos cuya finalidad no es su
+redefinición retroactiva, sino la verificación del instrumental, el
+re-aislamiento de causas, la ampliación de la evidencia, el reajuste de
+parámetros configurables y, únicamente en último caso, la documentación
+formal de la desviación. De este modo, la justificación metodológica del
+estudio se sostiene tanto si el umbral se alcanza como si no se alcanza:
+en el primer caso se dispone de evidencia de cumplimiento; en el
+segundo, de evidencia de límite técnico correctamente diagnosticada.
+
+\subsubsection{1.3.4. Delimitación del caso: coordenadas espaciales y
+temporales}\label{delimitaciuxf3n-del-caso-coordenadas-espaciales-y-temporales}
+
+En el plano espacial, la investigación se delimita a entornos interiores
+de instalaciones de uso institucional —aulas, laboratorios, oficinas y
+pasillos de circulación— caracterizados por geometrías cerradas,
+mobiliario y tabiquería de materiales de construcción convencionales,
+operando en la banda ISM de 2,4 GHz con infraestructura Wi-Fi de tipo
+punto de acceso doméstico o institucional. Se descartan explícitamente
+los escenarios exteriores, los de propagación entre plantas y las bandas
+de 5 GHz y 6 GHz, así como los entornos con procesamiento de señales en
+la capa física fuera del alcance del hardware empleado. En el plano
+temporal, la investigación se delimita al periodo de ejecución previsto
+en el cronograma del plan de tesis, organizado en cuatro etapas
+consecutivas: (i) diseño y construcción del prototipo con pruebas de
+integración; (ii) calibración del instrumento y campaña de mediciones
+bajo el diseño factorial; (iii) procesamiento de datos, modelado con
+Scikit-learn y construcción de tableros; y (iv) análisis, contrastación
+de resultados, redacción y sustentación. Las mediciones se realizarán en
+horarios y condiciones registradas, de modo que la campaña sea auditable
+y susceptible de repetición posterior.
+
+\subsection{1.4. Objetivos}\label{objetivos}
+
+\subsubsection{1.4.1. Objetivo Principal}\label{objetivo-principal}
+
+Diseñar, implementar y evaluar un prototipo IoT híbrido basado en
+microcontroladores ESP32, enlace Wi-Fi IEEE 802.11 y publicaciones MQTT,
+que permita correlacionar mediante técnicas de Machine Learning las
+variables físicas de radiofrecuencia con las variables dinámicas de red,
+con el fin de evaluar la calidad de servicio de las redes inalámbricas
+interiores y verificar de manera reproducible el umbral de desempeño del
+85\% fijado como criterio de éxito.
+
+\subsubsection{1.4.2. Objetivos
+Específicos}\label{objetivos-especuxedficos}
+
+\textbf{OE1.} Caracterizar el canal de propagación en interiores de la
+banda ISM de 2,4 GHz y las variables físicas de radiofrecuencia medibles
+con el instrumento —RSSI, SNR, potencia de recepción y ruido de fondo—,
+ajustando a las mediciones de campo un modelo de pérdida de distancia y
+evaluando su bondad de ajuste.
+
+\textbf{OE2.} Implementar el prototipo IoT híbrido —nodos ESP32, punto
+de acceso Wi-Fi, \emph{broker} MQTT y estación de adquisición— con la
+instrumentación y la sincronización necesarias para registrar de manera
+simultánea y trazable las variables físicas y las variables dinámicas de
+red.
+
+\textbf{OE3.} Ejecutar la campaña de mediciones bajo el diseño factorial
+experimental 3×3×3 y cuantificar las métricas de calidad de servicio
+(latencia extremo a extremo, jitter, razón de entrega de tramas, pérdida
+de paquetes y buen uso) frente al umbral del 85\%, aplicando el plan de
+contingencia de cinco pasos ante resultados que no alcancen dicho
+criterio.
+
+\textbf{OE4.} Desarrollar y validar, con la biblioteca Scikit-learn, los
+modelos de Machine Learning que correlacionen las variables físicas de
+radiofrecuencia con las variables dinámicas de red, evaluando su
+exactitud mediante validación cruzada, sus métricas de clasificación y
+regresión, y la importancia relativa de sus predictores.
+
+\textbf{OE5.} Construir los tableros de análisis en Power BI para la
+visualización y comunicación del estado de calidad de servicio, y
+documentar la viabilidad técnica y económica del prototipo frente a las
+soluciones de infraestructura centralizada convencionales.
+
+{[}INSERTAR AQUÍ TABLA: Matriz de consistencia de la investigación,
+relacionando problema, objetivos, preguntas, hipótesis y variables{]}
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Arquitectura general del sistema IoT
+híbrido…{]}
+
+\section{CAPÍTULO II: MARCO TEÓRICO Y
+CONCEPTUAL}\label{capuxedtulo-ii-marco-teuxf3rico-y-conceptual}
+
+El presente capítulo sustenta teóricamente la investigación. Se inicia
+con los antecedentes de trabajos previos relacionados (2.1); continúa
+con el desarrollo profundo de la base teórica que sustenta cada una de
+las preguntas de investigación —calidad de servicio, Wi-Fi IEEE 802.11,
+propagación en interiores, MQTT y Machine Learning— (2.2); procede al
+estado del arte organizado por enfoques y cierra con el párrafo de vacío
+que delimita la contribución pretendida (2.3); explicita el marco
+conceptual o glosario rector (2.4) y finaliza con la normatividad
+estrictamente pertinente al objeto de estudio (2.5).
+
+\subsection{2.1. Antecedentes de la
+Investigación}\label{antecedentes-de-la-investigaciuxf3n}
+
+Los antecedentes se presentan diferenciados por enfoque, con el
+propósito de mostrar el estado real del avance sobre el problema
+principal y la distancia que separa a los trabajos existentes de la
+propuesta formulada en este documento.
+
+\subsubsection{2.1.1. Antecedentes sobre caracterización y modelado de
+la propagación en
+interiores}\label{antecedentes-sobre-caracterizaciuxf3n-y-modelado-de-la-propagaciuxf3n-en-interiores}
+
+Chrysikos, Georgopoulos y Kotsopoulos (2009) realizaron una validación
+específica del sitio del modelo de pérdida de la Unión Internacional de
+Telecomunicaciones (ITU) a 2,4 GHz, a partir de mediciones adquiridas en
+un entorno de oficina inalámbrica (\emph{WLAN}). Los autores lograron un
+ajuste numérico del modelo ITU de carácter general al sitio particular,
+obteniendo valores de los parámetros del modelo correspondientes a esa
+banda de frecuencia, con el propósito de mejorar la precisión del
+presupuesto de enlace en redes inalámbricas locales. Su aporte evidencia
+que los modelos de referencia públicos requieren recalibración local
+para ser utilizados como herramienta de diseño.
+
+Solahuddin y Mardeni (2011) desarrollaron un modelo empírico de pérdida
+para redes IEEE 802.11n a 2,4 GHz en un edificio académico, comparando
+el desempeño de los modelos de doble pendiente, segmentado, de sombreado
+log-normal, ITU-R P.1238-1, Motley-Keenan ajustado y COST 231 de
+múltiples paredes. Concluyeron que el modelo segmentado ofrecía la mejor
+estimación de señal y lo tomaron como referencia para una optimización
+posterior. Mardeni y Solahuddin (2012) continuaron ese trabajo,
+reportando que el modelo mejorado reducía el error medio de predicción
+respecto del modelo original y que la validación en un edificio de
+oficinas distinto mantenía la precisión obtenida.
+
+Kaddouri, El Hajj, Zaharia y El Zein (2018) efectuaron mediciones
+extensas de pérdida de trayecto en una oficina de planta abierta a 2,4
+GHz y 5,8 GHz, cubriendo combinaciones de posición y altura
+transmisor–receptor en visibilidad directa y sin visibilidad directa, y
+realizaron una segunda campaña para cuantificar el efecto de la
+movilidad de las personas. Reportaron que la presencia de las personas
+incrementa la pérdida media del trayecto y que los exponentes de pérdida
+obtenidos difieren según la configuración de medición, además de
+contrastar sus resultados con los valores de la recomendación ITU-R
+P.1238.
+
+Rath, Timmadasari, Panigrahi y Simha (2017) propusieron un modelo
+estadístico de pérdida en interiores para operaciones regulares de Wi-Fi
+en la banda de 2,4 a 2,5 GHz, validado mediante campañas de medición en
+oficinas con distintas condiciones (espacio ocupado, oficina abierta,
+pasillo, comedor y locales de varios pisos). Compararon su modelo con el
+de ITU-R y con el de distancia logarítmica, reportando mejor ajuste de
+su propuesta a los datos experimentales y destacando que los exponentes
+de pérdida varían de forma significativa entre pasillos y espacios
+abiertos debido a la multipropagación y a las reflexiones.
+
+{[}INSERTAR AQUÍ TABLA: Cuadro comparativo de antecedentes de
+propagación en interiores — autores, banda, modelo evaluado y hallazgo
+clave{]}
+
+\subsubsection{2.1.2. Antecedentes sobre medición experimental del
+desempeño Wi-Fi y del QoS de protocolos de
+aplicación}\label{antecedentes-sobre-mediciuxf3n-experimental-del-desempeuxf1o-wi-fi-y-del-qos-de-protocolos-de-aplicaciuxf3n}
+
+Dianu, Riihijärvi y Petrova (2014) presentaron un estudio basado en
+mediciones del desempeño del estándar Wi-Fi IEEE 802.11ac en un entorno
+interior típico de oficina. Observaron que las mejoras de desempeño
+respecto de 802.11n son sensibles a las condiciones del canal —con caída
+rápida de las tasas de datos al aumentar la distancia— y que, mientras
+la interferencia de canal adyacente proveniente de equipos legados tiene
+un impacto severo, el mecanismo de acceso al medio permite compartir el
+canal de manera efectiva cuando la interferencia es de canal
+coexistente.
+
+Fiehe, Riihijärvi y Mähönen (2010) llevaron a cabo campañas de medición
+extensas de IEEE 802.11n en entornos de oficina controlados e
+interferidos. Reportaron que el rendimiento teórico no se alcanza en la
+práctica, que 802.11n tolera de manera razonable la interferencia
+proveniente de otras tecnologías de la banda ISM de 2,4 GHz, pero que
+interferentes estrechos de potencia suficiente y equipos legados en la
+misma región de espectro degradan de manera notable el desempeño.
+
+Miaoudakis, Stratakis, Antonidakis, Zaharopoulos y Stojanovic (2009)
+evaluaron mediante mediciones reales la coexistencia de redes
+inalámbricas locales y de área personal en una oficina típica,
+considerando interferencia 802.11–802.11 en canales solapados y no
+solapados y la interferencia Bluetooth sobre 802.11. Reportaron
+degradaciones importantes de rendimiento y aumentos de la latencia de
+ida y vuelta cuando los canales se solapan, y degradación residual aun
+en canales no solapados.
+
+van Bloem, Schiphorst, Kluwer y Slump (2012) desarrollaron una
+herramienta de medición de la influencia de distintas fuentes de
+interferencia sobre enlaces de comunicación IEEE 802.11, analizando la
+capa física y la capa de enlace para evaluar el impacto conjunto sobre
+la calidad de servicio. Sus resultados mostraron que ciertos
+interferentes producen degradación severa del QoS del Wi-Fi, y que el
+análisis a nivel de tramas permite identificar el mecanismo de
+interferencia con mayor detalle que las herramientas tradicionales
+centradas únicamente en rendimiento y tasa de error de paquetes.
+
+Parastar y Wang (2020) estudiaron experimentalmente la calidad de
+servicio en redes IEEE 802.11, poniendo énfasis en el mecanismo de
+acceso mejorado EDCA propuesto por IEEE 802.11e y en la influencia de
+sus parámetros (AIFS y TXOP) sobre el retardo, empleando para ello una
+plataforma real con redes definidas por software, en contraposición a
+los estudios mayoritariamente basados en simulación.
+
+En el plano de los protocolos de aplicación, Hijazi, Habaebi, Al-Haddad
+y Mohammed Zyoud realizaron una prueba de estrés de un servidor MQTT en
+una infraestructura de red privada de IoT, analizando retardo, jitter,
+pérdida de paquetes y rendimiento en escenarios de tiempo real y no
+tiempo real para los tres niveles de servicio MQTT. Reportaron que el
+retardo crece de forma marcada con la carga, que el nivel QoS 0 presenta
+los menores retardos por ausencia de confirmaciones y que los niveles
+QoS 1 y QoS 2 intercambian sobrecarga de control por mayor confiabilidad
+de entrega.
+
+Akbar, Amron, Mulya y Hanifah (2017) revisaron la implementación del
+protocolo MQTT para la comunicación en redes de sensores inalámbricas,
+midiendo el proceso de descubrimiento de puerta de enlace, la pérdida de
+paquetes en QoS 0, la duplicación de datos y los reintentos en QoS 1 y
+2, y el tiempo de ida y vuelta en los niveles confirmados, concluyendo
+que el nivel de servicio elegido determina explícitamente el compromiso
+entre velocidad y confiabilidad de la entrega.
+
+Nikfarjam Nashtifani (2026) midió experimentalmente la latencia en
+sistemas IoT de pequeña escala construidos con nodos ESP32 que publican
+por MQTT sobre Wi-Fi en interiores, sincronizando los relojes mediante
+NTP para obtener retardos de ida y vuelta de un solo sentido y de ida y
+vuelta, en distintas distancias de comunicación y en los niveles de QoS
+0 y 1. Concluyó que las condiciones de la red Wi-Fi y la arquitectura de
+comunicación influyen en la latencia en mayor medida que las
+limitaciones de proceso del microcontrolador, y que el nivel QoS 1
+incrementa el retardo y el jitter respecto de QoS 0.
+
+Chen y Kunz, por su parte, compararon experimentalmente protocolos de
+IoT bajo una red inalámbrica de acceso con restricciones de ancho de
+banda, retardo y pérdida, evidenciando que el comportamiento de MQTT
+ante la pérdida de paquetes y la reducción de capacidad del enlace lo
+distancia del desempeño de alternativas orientadas a la mensajería de
+baja latencia.
+
+{[}INSERTAR AQUÍ TABLA: Cuadro comparativo de antecedentes de medición
+Wi-Fi y QoS MQTT — autores, protocolo, métricas y hallazgo{]}
+
+\subsubsection{2.1.3. Antecedentes sobre Machine Learning aplicado a la
+predicción de QoS y al estado de los
+enlaces}\label{antecedentes-sobre-machine-learning-aplicado-a-la-predicciuxf3n-de-qos-y-al-estado-de-los-enlaces}
+
+Pawar, Jadhav, Lokhande, Raskar y Patil (2023) evaluaron los parámetros
+de calidad de servicio de la comunicación MQTT en aplicaciones de IoT
+mediante una red neuronal profunda, con el propósito de anticipar el
+comportamiento del enlace a partir de series de indicadores de red.
+
+Hameed (2023) planteó un marco de modelado de tráfico y predicción de
+QoS mediante técnicas de aprendizaje profundo avanzado, formulando la
+predicción de indicadores como problema de pronóstico de series
+temporales univariadas y multivariadas y validando la propuesta con
+datos de tráfico de aplicaciones IoT reales sobre acceso IEEE 802.15.4.
+
+Çoğay, Akkoç y Seçinti (2024) propusieron un marco de enrutamiento
+dinámico multiproto asistido por Machine Learning en el que un
+clasificador de paquetes basado en métodos de ensamble selecciona las
+rutas de acuerdo con la carga y el estado de los enlaces, evaluando la
+clasificación con métricas F1 y el enrutamiento en el simulador NS-3
+mediante razones de entrega de paquetes y rendimiento.
+
+Ávalos-Arce, Pérez-Díaz, Del-Valle-Soto y Briseño (2024) investigaron
+las limitaciones de los modelos de predicción del estado de paquetes en
+redes inalámbricas IEEE 802.15.4 sometidas a distintas interferencias,
+entrenando varios clasificadores supervisados con características
+extraídas de la captura de tramas. Reportaron que los atributos de
+fortaleza de red y de tamaño de paquete resultan predictores dominantes
+y que los métodos de ensamble (refuerzo de gradiente y bosques
+aleatorios) obtienen el mejor desempeño frente a métodos lineales y
+basados en vectores de soporte.
+
+Yazici y Güreş (2024) predijeron indicadores de QoS —razón de entrega de
+paquetes y rendimiento— en escenarios inalámbricos empleando múltiples
+métodos de Machine Learning con un esquema de validación cruzada anidada
+que evita la fuga de información entre la selección de parámetros y la
+evaluación; encontraron que los métodos de ensamble, y en particular los
+bosques aleatorios, ofrecen el mejor compromiso de error y coeficiente
+de determinación.
+
+Becvar, Plachy, Mach, Nikolov y Gesbert (2024) abordaron la predicción
+de la calidad de canal con Machine Learning, desde el concepto hasta la
+validación experimental, en un trabajo que subraya la brecha entre el
+desempeño reportado en condiciones controladas y el alcanzado en
+condiciones operativas reales.
+
+Benadji, Zitoune y Vèque (2023) propusieron la predicción de la razón de
+pérdida de paquetes como indicador de congestión en redes IoT mediante
+modelos de aprendizaje profundo y ventanas deslizantes sobre series
+temporales, con el fin de sustituir la reacción tardía a la congestión
+por una anticipación basada en datos.
+
+{[}INSERTAR AQUÍ TABLA: Cuadro comparativo de antecedentes de Machine
+Learning para predicción de QoS — autores, método, predictores y
+métricas{]}
+
+\subsubsection{2.1.4. Antecedentes sobre monitoreo, visualización y
+tableros de
+indicadores}\label{antecedentes-sobre-monitoreo-visualizaciuxf3n-y-tableros-de-indicadores}
+
+Ehrlich, Neumann, Biendarra y Jasperneite (2019) abordaron el monitoreo
+de la calidad de servicio en redes de comunicación industriales
+híbridas, analizando los métodos disponibles de extracción de
+información del tráfico y su aprovechamiento por los sistemas de gestión
+de red, en un contexto donde la visibilidad del estado de la red es
+condición para la toma de decisiones de configuración.
+
+Calderon, del Campo, Saavedra y Santamaría (2023) implementaron y
+evaluaron el desempeño de una plataforma IoT modular de arquitectura
+distribuida que combina herramientas de la familia Elastic con Apache
+Kafka, incluyendo un marco de monitoreo basado en agentes que supervisa
+la plataforma con arreglo a métricas definidas y la complementa con
+interfaces de visualización para facilitar el despliegue, la gestión y
+el mantenimiento.
+
+Praja, Tahir, Cahyani, Zahroeva, Anam y Prameswari (2025) desarrollaron
+un sistema de monitoreo y registro del tráfico Wi-Fi de aulas
+universitarias mediante captura de paquetes con Wireshark y su
+visualización interactiva en Power BI, identificando patrones de uso,
+tráfico dominante y anomalías potenciales a partir de los datos
+capturados.
+
+\subsubsection{2.1.5. Síntesis de los
+antecedentes}\label{suxedntesis-de-los-antecedentes}
+
+Los antecedentes descritos cubren, de manera conjunta, los cuatro
+frentes que la investigación moviliza: la caracterización física del
+canal, la medición experimental del desempeño Wi-Fi y de los protocolos
+de aplicación, la predicción del comportamiento del enlace mediante
+aprendizaje automático y la visualización de indicadores para la toma de
+decisiones. Sin embargo, cada conjunto de trabajos desarrolla su aporte
+de manera aislada respecto de los otros: los trabajos de propagación
+entregan modelos de atenuación sin vincularlos con métricas de QoS de
+aplicación; los de medición de protocolos entregan métricas sin modelar
+su dependencia de las variables físicas; los de Machine Learning
+predicen indicadores sin instrumentar de forma simultánea el plano
+físico con hardware de bajo costo; y los de visualización presentan
+tableros sin corresponder a modelos predictivos validados
+experimentalmente.
+
+{[}INSERTAR AQUÍ TABLA: Matriz de vacío de investigación — cobertura de
+los cuatro frentes en la literatura frente a la propuesta{]}
+
+\subsection{2.2. Marco Teórico}\label{marco-teuxf3rico}
+
+\subsubsection{2.2.1. Calidad de Servicio
+(QoS)}\label{calidad-de-servicio-qos}
+
+La Recomendación ITU-T E.800 define la calidad de servicio como el
+\emph{conjunto de efectos de un servicio que condicionan la satisfacción
+del usuario del mismo}. La definición, deliberadamente amplia, tiene una
+consecuencia práctica decisiva para la ingeniería: para que la QoS sea
+gestionable debe traducirse en \emph{indicadores medibles} (KPI)
+relacionados con la percepción del usuario o con el cumplimiento de
+acuerdos de nivel de servicio. De esta manera, la QoS opera en tres
+planos diferenciados: el plano del usuario (percepción subjetiva), el
+plano del servicio (parámetros contractuales) y el plano de la red
+(magnitudes técnicas observables en los equipos). La investigación se
+sitúa en el tercer plano, como fuente de evidencia que sustenta los dos
+anteriores.
+
+Las magnitudes técnicas empleadas en este trabajo se definen con
+precisión operacional:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Latencia extremo a extremo (\emph{end-to-end delay}).} Tiempo
+  transcurrido entre la emisión de un mensaje por el nodo publicador y
+  su recepción efectiva por el suscriptor, incluyendo el tiempo de
+  acceso al medio Wi-Fi, la cola de espera en el \emph{broker} y el
+  procesamiento de los extremos. La Recomendación ITU-T G.114 establece
+  que un retardo de ida de hasta 150 ms es prácticamente imperceptible
+  para la mayoría de los usuarios en aplicaciones interactivas, mientras
+  que por encima de 400 ms resulta generalmente inaceptable; este rango
+  se utiliza en la investigación como referencia interpretativa, no como
+  umbral de éxito.
+\item
+  \textbf{Jitter o variación del retardo.} Dispersión estadística de los
+  retardos de entrega consecutivos, típicamente expresada como la
+  desviación típica de la serie de retardos o como la diferencia de
+  retardo de paquetes (IPDV, definido en la RFC 3393). Un jitter elevado
+  degrada las aplicaciones basadas en flujo continuo aun cuando la
+  latencia media sea aceptable.
+\item
+  \textbf{Razón de entrega de tramas (PDR, \emph{Packet Delivery
+  Ratio}).} Cociente entre el número de mensajes recibidos correctamente
+  y el número de mensajes publicados, expresado en porcentaje. Es el
+  indicador binario de confiabilidad de extremo a extremo y el natural
+  para expresar el umbral del 85\% adoptado en la investigación.
+\item
+  \textbf{Pérdida de paquetes.} Complemento probabilístico de la PDR,
+  asociada a colisiones en el medio, a desbordamiento de colas, a
+  degradación del enlace físico y a desconexiones temporales.
+\item
+  \textbf{Buen uso (\emph{goodput}).} Cantidad de carga útil entregada
+  por unidad de tiempo, excluyendo las cabeceras, las confirmaciones y
+  los mensajes retransmitidos; permite distinguir el rendimiento
+  aparente del rendimiento efectivamente aprovechable por la aplicación.
+\item
+  \textbf{Índices de radiofrecuencia.} RSSI (\emph{Received Signal
+  Strength Indicator}), SNR (\emph{Signal-to-Noise Ratio}), nivel de
+  ruido de fondo y, cuando el controlador lo expone, la tasa de error
+  estimada. Constituyen la familia de \emph{variables físicas} del
+  modelo de correlación.
+\end{itemize}
+
+Conviene subrayar que la QoS es una propiedad \emph{emergente} del
+sistema completo: no se explica por la calidad del punto de acceso, ni
+por el ancho de banda contratado, ni por el protocolo de aplicación
+considerados aisladamente, sino por la interacción entre el canal de
+propagación, el mecanismo de acceso al medio y la semántica de
+confirmación del protocolo de transporte de mensajes. Esta
+característica justifica formalmente el enfoque transversal de la
+investigación.
+
+{[}INSERTAR AQUÍ TABLA: Definición operacional de las métricas de QoS
+empleadas — latencia, jitter, PDR, pérdida y buen uso, con unidad y
+referencia normativa{]}
+
+\subsubsection{2.2.2. Wi-Fi IEEE 802.11: acceso al medio y parámetros de
+operación}\label{wi-fi-ieee-802.11-acceso-al-medio-y-paruxe1metros-de-operaciuxf3n}
+
+La familia de estándares IEEE 802.11 define las capas física y de enlace
+para redes inalámbricas locales (WLAN). En la banda ISM de 2,4 GHz
+operan las variantes 802.11b, 802.11g y 802.11n, esta última con
+modulaciones OFDM, canales de 20 y 40 MHz y opciones de espacial
+\emph{Multiple-Input Multiple-Output}; las variantes 802.11ac y 802.11ax
+operan predominantemente en la banda de 5 GHz y, en el caso de 802.11ax,
+también en 6 GHz. Los canales de 20 MHz en 2,4 GHz se solapan entre sí,
+de modo que únicamente tres canales son mutuamente no solapados
+(típicamente los canales 1, 6 y 11), condición que constituye una
+restricción de diseño de primer orden en instalaciones con múltiples
+puntos de acceso y con presencia de redes vecinas.
+
+En la capa de enlace, el mecanismo básico de acceso distribuido (DCF,
+\emph{Distributed Coordination Function}) implementa un procedimiento de
+acceso al medio por detección de portadora con evitación de colisiones
+(CSMA/CA). Antes de transmitir, la estación verifica que el medio esté
+inactivo durante un intervalo de escucha extendida; si el medio está
+ocupado o si se produce una colisión, difiere la transmisión mediante un
+\emph{retroceso exponencial binario}: la estación selecciona
+aleatoriamente un entero dentro de una ventana de contienda cuyo tamaño
+se duplica hasta alcanzar un límite máximo, y vuelve a intentar el
+acceso. Este mecanismo se modela analíticamente mediante cadenas de
+Markov de dos dimensiones, en la formulación clásica de Bianchi (2000),
+que permite derivar expresiones de la probabilidad de transmisión
+condicionada, la probabilidad de colisión y la tasa de éxito de tramas
+en función de los parámetros de la ventana de contienda y del número de
+estaciones activas.
+
+Tres consecuencias de este diseño son directamente relevantes para la
+investigación:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Sensibilidad a la densidad y a la carga.} A medida que el
+  número de emisores activos o la tasa de ofrecimiento aumentan, la
+  probabilidad de colisión crece de manera no lineal y la ventana de
+  contienda se expande, elevando la latencia y reduciendo el buen uso.
+  La congestión, por tanto, no es únicamente un fenómeno de red, sino un
+  fenómeno del propio mecanismo de acceso.
+\item
+  \textbf{Sensibilidad a la calidad del canal.} Los mecanismos de sondeo
+  de portadora, la selección de la tasa de modulación y codificación y
+  las retransmisiones enlace a enlace reaccionan al RSSI y al SNR; una
+  degradación física se traduce en aumento de la tasa de error, mayor
+  número de reintentos y, en consecuencia, mayor jitter y menor PDR. Es
+  aquí donde las variables físicas y las variables de red se acoplan.
+\item
+  \textbf{Sobrecarga y asimetría de interferencias.} La banda de 2,4 GHz
+  es compartida con Bluetooth, Zigbee, cámaras inalámbricas, enlaces de
+  audio y video y equipos vecinos no coordinados. Las interferencias de
+  canal adyacente suelen ser más dañinas que las de canal coexistente,
+  por cuanto el mecanismo de acceso puede coordinarse únicamente con las
+  estaciones que perciben el mismo canal.
+\end{enumerate}
+
+Para dar respuesta a las aplicaciones con requerimientos diferenciados,
+IEEE 802.11e introdujo el mecanismo EDCA (\emph{Enhanced Distributed
+Channel Access}), comercializado como WMM, que sustituye una única cola
+de contienda por cuatro categorías de acceso con parámetros de escucha,
+ventana de retroceso y duración de transmisión diferenciados,
+permitiendo priorizar el tráfico de voz, vídeo, \emph{best effort} y de
+fondo. EDCA no garantiza QoS, sino que la \emph{diferencia}: la garantía
+efectiva sigue dependiendo del canal y de la carga, lo que mantiene
+vigente la necesidad de medición experimental.
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Mecanismo DCF/CSMA/CA con retroceso
+exponencial binario y su interacción con la calidad del canal
+(cross-layer){]}
+
+\subsubsection{2.2.3. Propagación en
+interiores}\label{propagaciuxf3n-en-interiores}
+
+El canal inalámbrico interior se caracteriza por tres fenómenos
+dominantes: la \emph{pérdida de trayecto} asociada a la expansión de la
+onda, la \emph{atenuación por obstáculos} —muros, tabiques, mobiliario,
+conductos y cuerpos humanos— y el \emph{desvanecimiento por
+multipropagación}, causado por la interferencia entre las múltiples
+copias de la señal que llegan al receptor por reflexión, difracción y
+dispersión. Cuando el receptor recibe una componente dominante
+acompañada de un conjunto de componentes dispersas, el desvanecimiento
+se describe con distribución Rician parametrizada por el factor K; en
+ausencia de componente dominante, corresponde a la distribución de
+Rayleigh; la familia Nakagami-\emph{m} generaliza ambos casos. Sobre la
+envolvente de potencia media se superpone el \emph{desvanecimiento por
+sombra}, de distribución log-normal, que captura la variación lenta de
+la atenuación por el desplazamiento respecto de los obstáculos.
+
+El modelo de pérdida de trayecto de distancia logarítmica constituye la
+herramienta de trabajo por excelencia de la investigación:
+
+PL(d) = PL(d₀) + 10 · n · log₁₀(d / d₀) + Xσ
+
+donde PL(d) es la pérdida de trayecto en decibelios a la distancia d, d₀
+es una distancia de referencia, n es el exponente de pérdida de trayecto
+y Xσ es una variable aleatoria gaussiana de desviación típica σ que
+representa el desvanecimiento por sombra. La Recomendación ITU-R P.1238
+proporciona una formulación específica para interiores de la forma L =
+20 log₁₀(f) + N log₁₀(d) + Lf(n) − 28 dB, donde f es la frecuencia en
+megahercios, d la separación en metros, N el coeficiente de pérdida de
+distancia y Lf(n) la pérdida por penetración de plantas, con valores
+tabulados de N para contextos residenciales, de oficina y comercial. Los
+modelos de múltiples paredes, en la línea de Motley-Keenan, añaden un
+término sumatorio que contabiliza el número y el tipo de materiales
+atraviesados por el trayecto.
+
+Dos cuestiones de ingeniería condicionan el aprovechamiento de estos
+modelos en la investigación:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Calibración local.} Los coeficientes N, σ y las pérdidas por
+  material son específicos del edificio y de la banda. Los antecedentes
+  revisados coinciden en que el modelo general debe ajustarse a las
+  mediciones del sitio antes de emplearse como herramienta de
+  predicción, y que el ajuste reduce el error de predicción de forma
+  apreciable.
+\item
+  \textbf{Adecuación al instrumento.} El prototipo basado en ESP32 no
+  dispone de instrumentación de canal complejo; expone fundamentalmente
+  el RSSI del controlador Wi-Fi, a partir del cual es posible estimar el
+  nivel de potencia recibida y el ruido de fondo. Por ello, la
+  caracterización se plantea en términos de magnitudes
+  \emph{observables} con el hardware disponible, y la fidelidad del
+  modelo se evalúa por su capacidad de reproducir la tendencia y la
+  dispersión de esas observaciones, no por su capacidad de reconstruir
+  el campo electromagnético completo.
+\end{itemize}
+
+La multipropagación posee además una consecuencia no lineal que
+justifica el enfoque de aprendizaje automático: el RSSI no disminuye
+monotónicamente con la distancia en escenarios cerrados, ya que las
+interferencias constructivas y destructivas producen máximos y mínimos
+locales. Un modelo lineal simple captura la tendencia global, pero no el
+comportamiento local que condiciona la calidad del enlace a distancias
+cortas.
+
+{[}INSERTAR AQUÍ TABLA: Cuadro comparativo de modelos de propagación en
+interiores — ITU-R P.1238 vs Motley-Keenan vs log-distance vs modelos
+estocásticos (Rayleigh, Rician, Nakagami-m){]}
+
+\subsubsection{2.2.4. MQTT y la arquitectura de transporte de mensajes
+IoT}\label{mqtt-y-la-arquitectura-de-transporte-de-mensajes-iot}
+
+MQTT (\emph{Message Queuing Telemetry Transport}) es un protocolo de
+mensajería ligero basado en el paradigma publicación–suscripción,
+definido como estándar por OASIS (versión 3.1.1 en 2014 y versión 5.0 en
+2019) y concebido para entornos de recursos limitados y enlaces de baja
+fiabilidad. Su arquitectura se organiza en tres entidades: el
+\emph{cliente publicador}, que envía mensajes a un \emph{tema}
+(\emph{topic}) jerárquico; el \emph{cliente suscriptor}, que se suscribe
+a temas de interés; y el \emph{broker} (servidor de mensajería), que
+mantiene las sesiones, enruta los mensajes y gestiona las
+confirmaciones. La separación entre publicadores y suscriptores elimina
+la necesidad de que los extremos se conozcan mutuamente, lo que
+simplifica el despliegue de nodos IoT y habilita la incorporación de
+nuevos consumidores de datos —como la base de datos de la investigación
+y la capa de tableros— sin modificar la configuración de los emisores.
+
+El protocolo define tres niveles de servicio que constituyen el eje de
+la variable experimental “nivel de QoS”:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{QoS 0 (al menos una vez, \emph{at most once}).} Entrega sin
+  confirmación: el mensaje se envía una sola vez y no se retransmite. Es
+  el nivel más rápido y de menor sobrecarga, pero no garantiza la
+  recepción ni la no duplicación.
+\item
+  \textbf{QoS 1 (al menos una vez).} Entrega con confirmación de
+  recibido (PUBACK): el emisor retransmite hasta recibir la
+  confirmación, lo que garantiza la entrega al menos una vez, a costa de
+  mayor latencia, mayor consumo de ancho de banda y posibilidad de
+  duplicados.
+\item
+  \textbf{QoS 2 (exactamente una vez).} Ciclo completo de cuatro
+  mensajes (PUBREC/PUBREL/PUBCOMP) que evita la duplicación mediante
+  control explícito de identificadores de paquete. Es el nivel con mayor
+  sobrecarga de control y el mayor tiempo de entrega.
+\end{itemize}
+
+A los niveles de servicio se suman parámetros de sesión con impacto
+directo en las métricas: el intervalo de \emph{keep alive} (que
+determina la detección de desconexión), el indicador de sesión limpia
+(que decide la recuperación de mensajes pendientes), el tiempo de
+caducidad de sesión, el tamaño máximo de carga útil y el uso de marcas
+de retención (\emph{retain}) y de mensajes de último valor conocido
+(\emph{last will}). La versión 5.0 añade \emph{reason codes},
+\emph{acknowledgements} diferidos y propiedades de mensaje que permiten
+afinar el control de flujo y la depuración, características que se
+consideran en la elección del \emph{broker}.
+
+La elección de MQTT como protocolo de la investigación obedece a tres
+razones de ingeniería: es el protocolo de facto del IoT sobre IP,
+dispone de implementaciones de \emph{broker} ligeras y de código abierto
+utilizables en una estación de adquisición local, y expone de forma
+explícita y configurable el compromiso entre confiabilidad y sobrecaba,
+lo que lo convierte en un factor experimental manipulable directamente.
+Sobre Wi-Fi, MQTT opera sobre TCP, de modo que la latencia extremo a
+extremo acumula el tiempo de acceso al medio inalámbrico, la ventana de
+contienda, las retransmisiones TCP y el ciclo de confirmación MQTT: el
+valor medido es, por construcción, una magnitud \emph{transversal} que
+integra la pila completa.
+
+El ESP32 constituye la plataforma de nodo elegida por su integración
+nativa de interfaz Wi-Fi IEEE 802.11 b/g/n y Bluetooth, su capacidad de
+operar como estación y como punto de acceso, su costo reducido, la
+disponibilidad de bibliotecas MQTT maduras y su perfil de consumo
+compatible con alimentación por bus o por batería de mediana duración.
+El prototipo emplea el ESP32 tanto como nodo publicador como
+instrumentador de los índices de radiofrecuencia, aprovechando la
+interfaz de estado del controlador Wi-Fi para obtener RSSI y nivel de
+ruido en cada publicación.
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Modelo Publish-Subscribe de MQTT con
+flujos de confirmación de los niveles QoS 0, 1 y 2{]}
+
+\subsubsection{2.2.5. Machine Learning aplicado a la evaluación de
+redes}\label{machine-learning-aplicado-a-la-evaluaciuxf3n-de-redes}
+
+El aprendizaje automático comprende los métodos que permiten a un
+sistema mejorar su desempeño a partir de la experiencia, en oposición a
+la programación explícita de reglas. La investigación se circunscribe al
+\emph{aprendizaje supervisado}, en el que se dispone de un conjunto de
+datos de entrada \textbf{X} (predictores) y de una variable objetivo
+\textbf{y} (respuesta) y se busca la función f : \textbf{X} → \textbf{y}
+que generalice a datos no observados. En el problema planteado se
+formulan dos tareas complementarias:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Clasificación.} La variable objetivo es discreta: por ejemplo,
+  si la combinación experimental cumple o no cumple el umbral del 85\%
+  en la métrica de referencia (PDR), o el estado de QoS codificado como
+  adecuado / degradado / crítico.
+\item
+  \textbf{Regresión.} La variable objetivo es continua: la predicción de
+  la latencia, del jitter o del buen uso a partir de los índices de
+  radiofrecuencia y de las condiciones de operación.
+\end{itemize}
+
+Las familias de algoritmos consideradas se seleccionan por su idoneidad
+con conjuntos de datos tabulares de tamaño moderado y por su
+interpretabilidad:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Regresión lineal con regularización (Ridge y Lasso).}
+  Proporcionan una línea base de referencia, cuantifican la asociación
+  lineal entre cada predictor y la respuesta y, mediante la
+  penalización, permiten reducir la varianza de las estimaciones e
+  identificar predictores poco informativos.
+\item
+  \textbf{Árbol de decisión.} Modelan relaciones no lineales e
+  interacciones por particiones sucesivas del espacio de predictores; su
+  lectura es directa, pero presentan varianza alta y tendencia al
+  sobreajuste cuando se profundiza el árbol.
+\item
+  \textbf{Bosques aleatorios y otros ensambles (\emph{gradient
+  boosting}).} Combina múltiples árboles entrenados sobre muestras y
+  subconjuntos de atributos, reduciendo la varianza sin incrementar
+  proporcionalmente el sesgo; se reportan ampliamente como los de mejor
+  desempeño en problemas de predicción de estado de enlaces e
+  indicadores de red.
+\item
+  \textbf{Métodos lineales logísticos para clasificación.} Actúan como
+  modelo de referencia interpretable ante problemas binarios.
+\end{itemize}
+
+La evaluación de los modelos se guía por principios que la investigación
+adopta de forma explícita:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Separación entre entrenamiento y prueba.} Los datos se
+  particionan, con estratificación cuando las clases están
+  desequilibradas, de modo que la evaluación final se realice sobre
+  observaciones no vistas durante el ajuste.
+\item
+  \textbf{Validación cruzada en \emph{k} pliegues.} Permite estimar la
+  varianza del desempeño y detectar inestabilidad del modelo; en
+  problemas con búsqueda de hiperparámetros se prefiere el esquema
+  anidado, que evita la \emph{fuga} de información entre la selección de
+  configuraciones y la evaluación.
+\item
+  \textbf{Métricas acordes al desbalance de clases.} Además de la
+  exactitud, se emplean precisión, sensibilidad, especificidad,
+  \emph{F}1 y el área bajo la curva ROC; para la regresión, el error
+  absoluto medio, la raíz del error cuadrático medio y el coeficiente de
+  determinación.
+\item
+  \textbf{Interpretabilidad.} El análisis de importancia de atributos y
+  las correlaciones parciales se emplean para traducir el modelo al
+  lenguaje físico de la ingeniería: si el RSSI, la carga de tráfico y el
+  nivel de QoS no aparecen entre los predictores dominantes, el modelo
+  será cuestionado aun con métricas elevadas.
+\item
+  \textbf{Reproducibilidad.} La fijación de semillas aleatorias, la
+  versionación del conjunto de datos y la conservación del
+  \emph{pipeline} completo de preprocesamiento y modelado forman parte
+  del protocolo experimental.
+\end{enumerate}
+
+La biblioteca Scikit-learn (Pedregosa y otros, 2011) se elige como
+entorno de implementación por su madurez, su disponibilidad de código
+abierto, su coherencia de API entre preprocesamiento, selección de
+modelos y métricas, y su compatibilidad con el ecosistema de análisis de
+datos empleado en la investigación.
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Pipeline de evaluación de modelos de
+Machine Learning — partición, validación cruzada en k pliegues, métricas
+e interpretabilidad{]}
+
+\subsection{2.3. Estado del Arte}\label{estado-del-arte}
+
+El estado del arte se organiza por enfoques, de modo que cada frente de
+trabajo aparezca con su alcance real, sus resultados consolidados y sus
+límites.
+
+\subsubsection{Enfoque 1: Modelado y calibración de la propagación en
+interiores}\label{enfoque-1-modelado-y-calibraciuxf3n-de-la-propagaciuxf3n-en-interiores}
+
+Las campañas de medición realizadas en oficinas, edificios académicos y
+locales comerciales a 2,4 GHz han consolidado un conjunto de
+conocimientos estables: el exponente de pérdida de trayecto varía
+significativamente entre espacios abiertos, pasillos y ambientes con
+tabiquería; la presencia de personas incrementa de forma medible la
+atenuación media; los coeficientes de las recomendaciones generales
+deben ajustarse al sitio para reducir el error de predicción; y los
+modelos de múltiples paredes superan a los modelos de distancia simple
+cuando el trayecto atraviesa obstáculos identificables (Chrysikos y
+otros, 2009; Solahuddin y Mardeni, 2011; Mardeni y Solahuddin, 2012;
+Kaddouri y otros, 2018; Rath y otros, 2017). Este enfoque alcanza, por
+tanto, un grado de madurez alto en lo que respecta a la \emph{estimación
+de atenuación}. Su límite reside en que las variables resultantes rara
+vez se vinculan de manera simultánea con indicadores de QoS de
+aplicación medidos en el mismo experimento.
+
+\subsubsection{Enfoque 2: Medición experimental del desempeño Wi-Fi y de
+los protocolos de
+aplicación}\label{enfoque-2-mediciuxf3n-experimental-del-desempeuxf1o-wi-fi-y-de-los-protocolos-de-aplicaciuxf3n}
+
+Las mediciones de campo sobre IEEE 802.11n y 802.11ac en oficinas han
+demostrado que las tasas teóricas no se alcanzan en la práctica, que el
+rendimiento decae con la distancia y que las interferencias de canal
+adyacente degradan severamente el enlace (Fiehe y otros, 2010; Dianu y
+otros, 2014; Miaoudakis y otros, 2009; van Bloem y otros, 2012). En
+paralelo, los estudios experimentales de EDCA han mostrado la influencia
+medible de sus parámetros sobre el retardo en plataformas reales
+(Parastar y Wang, 2020). Sobre la capa de aplicación, las pruebas de
+estrés y los bancos de ensayo con MQTT han establecido el ordenamiento
+cualitativo de sus niveles de servicio en términos de retardo, jitter,
+pérdida y sobrecarga, tanto en redes de sensores como sobre Wi-Fi con
+nodos ESP32 (Hijazi y otros; Akbar y otros, 2017; Nikfarjam Nashtifani,
+2026; Chen y Kunz). Este enfoque entrega, así, la \emph{línea base
+métrica} de la investigación: sabe cómo se comporta el protocolo
+aisladamente. Su límite es que las mediciones se reportan como funciones
+de una variable a la vez —distancia, carga o nivel de QoS— y no como un
+diseño factorial que permita estimar interacciones, ni acompañadas de un
+modelo de predicción.
+
+\subsubsection{Enfoque 3: Predicción y clasificación del estado del
+enlace mediante Machine
+Learning}\label{enfoque-3-predicciuxf3n-y-clasificaciuxf3n-del-estado-del-enlace-mediante-machine-learning}
+
+La tercera línea concentra los avances más recientes. Se han aplicado
+redes neuronales profundas a la evaluación de parámetros QoS de MQTT
+(Pawar y otros, 2023), modelos de series temporales y
+\emph{transformers} a la predicción de indicadores de red (Hameed,
+2023), métodos de ensamble a la clasificación de paquetes y al
+enrutamiento asistido por aprendizaje (Çoğay y otros, 2024; Ávalos-Arce
+y otros, 2024; Yazici y Güreş, 2024) y aprendizaje profundo a la
+anticipación de congestión (Benadji y otros, 2023). Los trabajos
+coinciden en tres hallazgos transferibles: los métodos de ensamble
+superan consistentemente a los métodos lineales en tareas de predicción
+de indicadores; la selección rigurosa de hiperparámetros con validación
+cruzada anidada mejora la robustez de las estimaciones; y atributos
+asociados a la fortaleza de enlace y a la configuración de transmisión
+figuran entre los predictores dominantes. El enfoque de predicción de
+calidad de canal con validación experimental confirma además que existe
+una brecha entre el desempeño obtenido en condiciones de laboratorio y
+el operativo (Becvar y otros, 2024). Su límite es que, en la gran
+mayoría de los casos, los predictores provienen de simuladores, de
+rastreadores de paquetes o de registros de una sola capa, y no de un
+instrumento propio que registre simultáneamente radiofrecuencia y
+aplicación en un diseño experimental controlado.
+
+\subsubsection{Enfoque 4: Monitoreo, visualización y gestión de la
+calidad de
+servicio}\label{enfoque-4-monitoreo-visualizaciuxf3n-y-gestiuxf3n-de-la-calidad-de-servicio}
+
+El cuarto frente comprende los trabajos que trasladan las mediciones a
+la operación. Se han propuesto marcos de monitoreo de plataformas IoT
+con arquitecturas de streaming y visualización integrada (Calderon y
+otros, 2023), marcos de monitoreo de QoS en redes industriales híbridas
+orientados a alimentar a los sistemas de gestión (Ehrlich y otros, 2019)
+y, en una vertiente de menor complejidad pero alta aplicabilidad,
+sistemas de captura de tráfico Wi-Fi con visualización interactiva en
+Power BI para el análisis de uso y detección de anomalías en
+instalaciones educativas (Praja y otros, 2025). Este enfoque aporta el
+mecanismo de \emph{traducción} entre el resultado analítico y la
+decisión, pero habitualmente se limita a visualizar datos ya procesados,
+sin corresponder a un modelo predictivo validado ni a un criterio de
+éxito formalizado.
+
+\subsubsection{Párrafo de vacío}\label{puxe1rrafo-de-vacuxedo}
+
+Del recorrido precedente se desprende que la literatura disponible
+ofrece, de manera separada, (i) modelos de propagación en interiores
+calibrables pero desconectados de las métricas de calidad de servicio;
+(ii) mediciones experimentales del comportamiento Wi-Fi y de los niveles
+de servicio MQTT que carecen de un diseño factorial capaz de estimar las
+interacciones entre propagación, carga y confiabilidad del protocolo;
+(iii) modelos de Machine Learning que predicen indicadores de red sobre
+datos de una sola capa o provenientes de simulación, sin instrumentación
+propia que registre simultáneamente las variables físicas y las
+variables dinámicas; y (iv) tableros de visualización que comunican
+descriptores de la red sin sustento en un modelo predictivo ni en un
+criterio de éxito formal. En consecuencia, \textbf{existe un vacío de
+investigación en la integración experimental de los cuatro frentes: no
+se dispone, hasta donde alcanza la revisión efectuada, de un prototipo
+IoT híbrido de bajo costo que, mediante una única campaña de mediciones
+estructurada en un diseño factorial 3×3×3, registre de forma
+sincronizada las variables físicas de radiofrecuencia y las variables
+dinámicas de red; correlacione ambas familias mediante modelos de
+aprendizaje automático validados; verifique un criterio de éxito
+explícito del 85\% con un plan de contingencia predefinido; y comunique
+el resultado en tableros de decisión.} La presente investigación se
+sitúa exactamente en ese punto de intersección.
+
+\textbf{NOTA:} Si bien los trabajos descritos en los cuatro enfoques
+constituyen precedentes legítimos de las técnicas empleadas, la
+propuesta se diferencia de ellos de manera sustancial. Frente a los
+estudios de propagación (Enfoque 1), no se limita a estimar atenuación,
+sino que utiliza la caracterización del canal como fuente de predictores
+de una variable de QoS. Frente a las mediciones de protocolo (Enfoque
+2), no evalúa un factor aislado, sino que emplea un diseño factorial
+completo 3×3×3 que permite estimar efectos principales e interacciones
+entre escenario de propagación, carga de tráfico y nivel de servicio
+MQTT. Frente a los trabajos de Machine Learning (Enfoque 3), no consume
+datos de simuladores ni de una sola capa, sino que construye su propio
+instrumento de adquisición sincronizada y somete el modelo a un criterio
+de éxito del 85\% regido por un plan de contingencia de cinco pasos.
+Frente a los trabajos de visualización (Enfoque 4), no presenta tableros
+descriptivos, sino una capa de indicadores alimentada por resultados
+estadísticos y predictivos previamente validados. En suma, lo que se
+propone hacer no es la repetición de alguno de los enfoques previos,
+sino su integración en un único protocolo experimental reproducible.
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Modelo de pila de protocolos y la
+interacción cross-layer entre Wi-Fi IEEE 802.11 y MQTT{]}
+
+\subsection{2.4. Marco Conceptual}\label{marco-conceptual}
+
+\textbf{Calidad de Servicio (QoS).} Conjunto de efectos de un servicio
+que condicionan la satisfacción del usuario (ITU-T E.800); en este
+trabajo, su expresión operacional corresponde al conjunto de métricas de
+latencia, jitter, PDR, pérdida y buen uso.
+
+\textbf{Latencia extremo a extremo.} Tiempo transcurrido desde la
+emisión de un mensaje por el nodo publicador hasta su recepción efectiva
+por el suscriptor, incluyendo acceso al medio, cola en el \emph{broker}
+y procesamiento de extremos.
+
+\textbf{Jitter.} Variación de los retardos de entrega consecutivos; se
+expresa como desviación típica de la serie de retardos o como diferencia
+de retardo de paquetes.
+
+\textbf{Razón de entrega de tramas (PDR).} Porcentaje de mensajes
+recibidos correctamente respecto del total de mensajes publicados;
+métrica de referencia para el umbral del 85\%.
+
+\textbf{Buen uso (\emph{goodput}).} Carga útil entregada por unidad de
+tiempo, excluidas cabeceras, confirmaciones y retransmisiones.
+
+\textbf{Banda ISM.} Bandas de radio Industrial, Científica y Médica, de
+uso libre sin licencia, en las que operan Wi-Fi, Bluetooth y Zigbee bajo
+la condición de no causar interferencias perjudiciales.
+
+\textbf{Wi-Fi / IEEE 802.11.} Familia de estándares de las capas física
+y de enlace para redes inalámbricas locales; en este trabajo, la
+variante operativa en 2,4 GHz sobre la que se transmiten las
+publicaciones MQTT.
+
+\textbf{DCF y CSMA/CA.} Función de coordinación distribuida y método de
+acceso al medio por detección de portadora con evitación de colisiones,
+base del mecanismo de acceso de IEEE 802.11.
+
+\textbf{Retroceso exponencial binario.} Procedimiento de diferimiento
+aleatorio de la transmisión mediante una ventana de contienda que se
+duplica tras cada colisión, hasta un límite máximo.
+
+\textbf{EDCA / WMM.} Mecanismo de acceso mejorado definido por IEEE
+802.11e que diferencia cuatro categorías de tráfico con parámetros de
+contienda distintos; prioriza, pero no garantiza, calidad de servicio.
+
+\textbf{Nodo no visible (\emph{hidden node}).} Situación topológica en
+la que dos estaciones no perciben entre sí pero transmiten hacia el
+mismo punto de acceso, provocando colisiones no detectables por el
+sondeo de portadora.
+
+\textbf{Multipropagación.} Llegada al receptor de múltiples copias de la
+señal por reflexión, difracción y dispersión, origen del desvanecimiento
+selectivo.
+
+\textbf{Desvanecimiento por sombra.} Variación lenta de la potencia
+recibida debida a obstáculos entre transmisor y receptor; modelada como
+variable aleatoria gaussiana en decibelios.
+
+\textbf{Exponente de pérdida de trayecto.} Parámetro n que cuantifica la
+rapidez con que la potencia decrece con la distancia en el modelo de
+pérdida logarítmica; en interiores su valor depende del material y de la
+geometría del sitio.
+
+\textbf{RSSI.} Indicador de intensidad de señal recibida expuesto por el
+controlador Wi-Fi; predictor físico principal del prototipo.
+
+\textbf{SNR.} Relación señal-ruido en el receptor; condiciona la tasa de
+error alcanzable y, por tanto, la selección de modulación y la necesidad
+de reintentos.
+
+\textbf{MQTT.} Protocolo de mensajería ligero basado en
+publicación–suscripción, definido por OASIS, empleado para transportar
+las mediciones de los nodos hasta el \emph{broker}.
+
+\textbf{Tema (\emph{topic}).} Cadena jerárquica a la que se publican o
+de la que se suscriben los mensajes en MQTT; estructura lógica que
+organiza los flujos de datos del prototipo.
+
+\textbf{Nivel de QoS MQTT.} Grado de confiabilidad acordado entre
+cliente y \emph{broker}: QoS 0 sin confirmación, QoS 1 con confirmación
+y QoS 2 con ciclo completo de cuatro manos.
+
+\textbf{\emph{Broker} MQTT.} Servidor que mantiene las sesiones, enruta
+los mensajes entre publicadores y suscriptores y gestiona las
+confirmaciones.
+
+\textbf{ESP32.} Microcontrolador de bajo costo con interfaz Wi-Fi IEEE
+802.11 y Bluetooth integrado; plataforma del nodo instrumentador del
+prototipo.
+
+\textbf{Prototipo IoT híbrido.} Conjunto hardware–software que integra
+nodos ESP32, infraestructura Wi-Fi, \emph{broker} MQTT, base de datos y
+capa de análisis para la adquisición conjunta de variables físicas y de
+red.
+
+\textbf{Aprendizaje supervisado.} Paradigma de Machine Learning en el
+que un modelo se ajusta a un conjunto de datos etiquetado para predecir
+una variable objetivo.
+
+\textbf{Clasificador / regresor.} Modelo que predice una categoría
+discreta / una magnitud continua.
+
+\textbf{Bosque aleatorio (\emph{random forest}).} Método de ensamble que
+combina múltiples árboles de decisión entrenados sobre muestras y
+subconjuntos aleatorios de atributos.
+
+\textbf{Validación cruzada en \emph{k} pliegues.} Procedimiento de
+evaluación en el que el conjunto de datos se divide en \emph{k} partes y
+el modelo se entrena y evalúa en rotación, estimando la capacidad de
+generalización.
+
+\textbf{Exactitud, sensibilidad, precisión y \emph{F}1.} Métricas de
+desempeño de un clasificador; \emph{F}1 es la media armónica entre
+precisión y sensibilidad, recomendable ante clases desequilibradas.
+
+\textbf{Diseño factorial experimental.} Plan de experimentación en el
+que se manipulan simultáneamente varios factores con sus respectivos
+niveles, permitiendo estimar efectos principales e interacciones.
+
+\textbf{Efecto principal e interacción.} Influencia promedio de un
+factor sobre la respuesta; influencia conjunta de dos o más factores que
+no resulta de la suma de sus efectos individuales.
+
+\textbf{Umbral del 85\%.} Criterio de éxito metodológico
+operacionalizado: el porcentaje mínimo de cumplimiento que debe alcanzar
+la métrica de referencia (PDR) y la exactitud del modelo predictivo para
+considerar verificada la hipótesis de trabajo.
+
+\textbf{Plan de contingencia de cinco pasos.} Procedimiento predefinido
+de respuesta ante resultados que no alcanzan el umbral del 85\%, con
+pasos de verificación instrumental, re-aislamiento de causas, ampliación
+de evidencia, reajuste de parámetros y documentación formal de la
+desviación.
+
+\textbf{Power BI.} Plataforma de inteligencia de negocio para la
+modelación de datos, el cálculo de medidas y la construcción de tableros
+interactivos con indicadores de desempeño.
+
+\textbf{KPI y tablero.} Indicador clave de desempeño y superficie visual
+que lo comunica con tendencias, metas y estados de cumplimiento.
+
+\subsection{2.5. Normatividad y
+Legislación}\label{normatividad-y-legislaciuxf3n}
+
+La normatividad aplicable se limita a los documentos estrictamente
+pertinentes con el objeto de estudio:
+
+\textbf{Estándares IEEE 802.11.} El estándar IEEE 802.11 y sus
+modificaciones (802.11n, 802.11e/EDCA, 802.11ac, 802.11ax) definen las
+reglas de convivencia del enlace utilizado por el prototipo:
+modulaciones, canales, mecanismos de acceso al medio y parámetros de
+contienda. Su cumplimiento es condición de que las mediciones sean
+comparables con las de terceros.
+
+\textbf{Estándar OASIS MQTT.} La especificación MQTT Version 5.0 y su
+predecesora 3.1.1, publicadas por el consorcio OASIS, definen la
+semántica de los niveles de servicio, los flujos de confirmación y los
+parámetros de sesión cuyo efecto se mide experimentalmente.
+
+\textbf{Recomendaciones ITU-T.} La Recomendación E.800 aporta la
+definición normativa de calidad de servicio; la Recomendación G.114 fija
+las referencias de tolerancia al retardo de ida; la serie Y.1540
+establece clases de desempeño de transferencia de paquetes IP que se
+toman como marco interpretativo de los resultados.
+
+\textbf{Recomendaciones ITU-R.} La Recomendación ITU-R P.1238
+proporciona los modelos y parámetros de propagación en interiores
+empleados como línea base de comparación del modelo calibrado en el
+escenario de medición.
+
+\textbf{Reglamento de Radiocomunicaciones de la Unión Internacional de
+Telecomunicaciones.} El Reglamento establece el régimen de las bandas
+ISM, de uso libre y sin licencia, bajo la condición de no causar
+interferencias perjudiciales a otros servicios; esta condición delimita
+el marco de operación del prototipo y de los equipos vecinos con los que
+coexiste.
+
+\textbf{Marco de protección de datos personales.} La normativa nacional
+de protección de datos personales resulta pertinente en tanto la
+investigación opera con registros de tráfico y de estado de enlace. El
+protocolo experimental contempla explícitamente la recolección exclusiva
+de métricas de red y de radiofrecuencia, sin captura de contenido de las
+comunicaciones ni de datos personales de los usuarios, condición que se
+verifica durante la etapa de instrumentación y se declara en el informe
+final.
+
+\textbf{Aspectos de seguridad.} Si bien la seguridad del transporte no
+constituye una variable de la investigación, la utilización de canales
+cifrados y de credenciales de acceso al \emph{broker} se rige por las
+prácticas recomendadas en las propias especificaciones de OASIS MQTT y
+por la configuración segura del punto de acceso inalámbrico, con el
+propósito de que el tráfico experimental no introduzca sesgos ni
+vulnerabilidades en la red de la institución anfitriona.
+
+\section{CAPÍTULO III: ELABORACIÓN DE LA
+PROPUESTA}\label{capuxedtulo-iii-elaboraciuxf3n-de-la-propuesta}
+
+El presente capítulo describe la propuesta en su integridad: las
+generalidades del diseño de investigación (3.1), el esquema del
+prototipo (3.2), la definición operacional de las variables (3.3), el
+diseño factorial experimental 3×3×3 que estructura la campaña de
+mediciones (3.4), el criterio de éxito del 85\% con su plan de
+contingencia explícito de cinco pasos (3.5), el alcance de la
+intervención (3.6) y el procedimiento de validación que garantiza el
+rigor científico de los resultados (3.7).
+
+\subsection{3.1. Generalidades}\label{generalidades}
+
+\subsubsection{3.1.1. Tipo, nivel, enfoque y método de
+investigación}\label{tipo-nivel-enfoque-y-muxe9todo-de-investigaciuxf3n}
+
+\textbf{Tipo.} La investigación es \emph{aplicada}, porque su finalidad
+inmediata es producir un artefacto —el prototipo IoT híbrido— y un
+conjunto de reglas de uso —el protocolo de evaluación del QoS— que
+resuelven una problemática concreta de ingeniería. Es también de
+carácter \emph{experimental}, porque manipula deliberadamente factores
+de un sistema y observa la respuesta bajo condiciones controladas, lo
+que habilita la atribución causal de los cambios observados.
+
+\textbf{Nivel.} El nivel es \emph{explicativo-correlacional}: la primera
+fase explica la influencia de los factores experimentales sobre las
+métricas de calidad de servicio mediante análisis de varianza; la
+segunda establece la relación estadística y predictiva entre las
+variables físicas de radiofrecuencia y las variables dinámicas de red
+mediante modelos de aprendizaje automático. El nivel explicativo se
+justifica por el carácter manipulado de los factores; el correlacional,
+por el carácter observacional de los índices de radiofrecuencia, que no
+se manipulan sino que se miden.
+
+\textbf{Enfoque.} Cuantitativo, con uso secundario de información de
+carácter cualitativo únicamente en la documentación de incidentes
+operativos (observaciones del laboratorio, notas de campo sobre
+condiciones ambientales) que se emplean como contexto interpretativo y
+no como evidencia estadística.
+
+\textbf{Método.} Método experimental con dos momentos complementarios:
+(i) \emph{medición y comparación} bajo un diseño factorial completo, que
+responde a la PE2; y (ii) \emph{modelado predictivo supervisado}, que
+responde a la PE3. Ambos momentos comparten la misma base de datos,
+generada por un único instrumento de adquisición, condición que
+garantiza la coherencia entre el análisis de efectos y el análisis de
+correlación.
+
+\subsubsection{3.1.2. Lugar de ejecución}\label{lugar-de-ejecuciuxf3n}
+
+La investigación se ejecuta en el interior de una casa habitación de uso
+residencial, acondicionada como escenario experimental controlado. La
+elección de un entorno residencial obedece a tres razones de validez
+ecológica: (i) constituye el escenario natural del despliegue IoT
+doméstico, que es el horizonte de aplicación declarado en la PE4, de
+modo que las condiciones de propagación observadas son representativas
+del contexto real de uso; (ii) ofrece una geometría de recintos cerrados
+con tabiquería de concreto, mobiliario y distribución de puertas y
+ventanas equivalente a la de cualquier vivienda urbana estándar, lo que
+permite caracterizar atenuaciones típicas de muros de carga y tabiques
+no estructurales; y (iii) al estar bajo control exclusivo del
+experimentador, permite fijar la ubicación del punto de acceso, de los
+nodos y del \emph{broker}, y mantener constantes las condiciones de
+ocupación del espacio durante los ensayos.
+
+El escenario se encuentra delimitado por un plano o croquis de planta de
+la vivienda, levantado a escala aproximada y con las distancias entre
+los puntos de emplazamiento medidas en metros. Este plano cumple una
+función metodológica triple: (i) sirve como instrumento de trazabilidad,
+pues fija de manera permanente y reproducible las coordenadas de
+emplazamiento del punto de acceso, de los tres nodos emisores (N1, N2 y
+N3), del nodo suscriptor y de la estación de adquisición; (ii)
+constituye el soporte sobre el cual se codifican los niveles del factor
+A —escenario de propagación— conforme a la trayectoria radioeléctrica
+que media entre emisor y receptor; y (iii) permite a un tercero
+reconstruir la geometría del experimento sin necesidad de acudir al
+escenario físico, condición exigida por la validación experimental
+descrita en el apartado 3.7. El croquis se incorpora al cuaderno de
+campo y a los anexos del documento final, junto con fotografías del
+emplazamiento correspondientes a cada nivel de propagación.
+
+Sobre la base de este levantamiento geométrico, los tres niveles del
+factor A se operacionalizan en el entorno residencial de la siguiente
+manera:
+
+\begin{itemize}
+\item
+  \textbf{A1 — Visibilidad directa.} El nodo emisor y el nodo suscriptor
+  se disponen dentro del mismo recinto o en recintos contiguos
+  comunicados por puerta abierta, con línea visual directa entre ambos y
+  sin muro de concreto interpuesto. La distancia entre emisor y receptor
+  se fija en un rango corto, de orden métrico, representativo de la
+  proximidad típica entre dispositivos IoT domésticos —por ejemplo, un
+  sensor y su pasarela en la misma habitación o en habitaciones
+  contiguas comunicadas por espacio abierto—.
+\item
+  \textbf{A2 — Muro de concreto.} El nodo suscriptor se traslada a un
+  recinto distinto del emisor, de modo que el trayecto radioeléctrico
+  atraviesa exactamente un muro de concreto —de carga o tabique
+  equivalente— sin visibilidad directa entre ambos puntos. La distancia
+  geométrica se mantiene en un orden de magnitud comparable al del nivel
+  A1, de manera que la diferencia observada entre A1 y A2 se atribuya
+  predominantemente a la atenuación del muro y no a la pérdida por
+  distancia, en concordancia con el modelo de pérdida de potencia
+  multi-muro desarrollado en el marco teórico.
+\item
+  \textbf{A3 — Doble muro o ruido ISM elevado.} El nodo suscriptor se
+  ubica en un recinto cuya comunicación con el emisor requiere atravesar
+  dos muros de concreto —por ejemplo, entre extremos opuestos de la
+  vivienda o entre el área principal y un espacio semiabierto contiguo—
+  o, alternativamente, el ensayo se ejecuta en un periodo en el cual la
+  banda ISM de 2,4 GHz presenta un ruido de fondo elevado por
+  interferencia de redes vecinas o de aparatos electrodomésticos en
+  operación. En cualquiera de las dos variantes, el nivel A3 representa
+  la condición de propagación severa; la variante empleada en cada
+  ensayo se registra explícitamente en el cuaderno de campo para efectos
+  de trazabilidad y de interpretación de los resultados.
+\end{itemize}
+
+El punto de acceso —router Wi-Fi doméstico— y la estación de
+adquisición, sobre la cual se instala el \emph{broker} Mosquitto, se
+emplazan en posiciones fijas y de antemano definidas en el croquis, que
+permanecen inalterables durante toda la campaña. El \emph{broker} MQTT y
+la base de datos se operan en una red local (LAN) del propio escenario
+experimental, de modo que el trayecto de cada mensaje quede íntegramente
+bajo control del experimentador y la influencia de Internet sobre la
+latencia quede excluida de las mediciones. Para ello, el router
+permanece operativo en modo aislado —sin enlace con Internet o con la
+WAN desconectada— durante toda la campaña principal, de forma que el
+tráfico externo no introduzca una fuente de variación no controlada
+sobre el medio compartido de la banda ISM; únicamente los ensayos
+expresamente destinados a evaluar el escenario remoto, ejecutados en una
+etapa complementaria y fuera de la matriz factorial principal, se
+realizan con el enlace a Internet habilitado.
+
+Las condiciones ambientales del escenario —ocupación humana, estado de
+puertas y ventanas, aparatos electrodomésticos encendidos o apagados y
+presencia o ausencia de personas en los recintos— se fijan de antemano y
+se mantienen constantes dentro de cada ensayo, registrándose en el
+cuaderno de campo toda desviación. Este control ambiental es
+indispensable en un entorno residencial, donde la presencia humana y el
+funcionamiento de electrodomésticos constituyen fuentes de atenuación y
+de interferencia cuya variación no controlada degradaría la validez
+interna del experimento.
+
+\subsubsection{3.1.3. Material y equipos}\label{material-y-equipos}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Componente
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Especificación funcional
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Rol en el experimento
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Nodos emisores (3 unidades) & Placa ESP32 NodeMCU DevKit V1 con interfaz
+Wi-Fi IEEE 802.11 b/g/n, firmware propio con biblioteca MQTT y lectura
+de RSSI/SNR del controlador & Generan la carga de tráfico y reportan los
+índices de radiofrecuencia en cada publicación \\
+Nodo suscriptor (1 unidad) & Placa ESP32 NodeMCU DevKit V1 con conexión
+Wi-Fi y marca de tiempo local & Registra la recepción, calcula la
+latencia extremo a extremo y verifica la unicidad de los mensajes \\
+Punto de acceso inalámbrico & Router Wi-Fi doméstico operativo en la
+banda ISM de 2,4 GHz, en un canal fijo no solapado (1, 6 u 11) & Define
+el medio de acceso y las condiciones de contienda \\
+\emph{Broker} MQTT & \emph{Broker} de código abierto (por ejemplo,
+Mosquitto) instalado en la estación de adquisición, con registro
+(\emph{logging}) de sesión y de mensajes & Enruta y confirma los
+mensajes según el nivel de QoS ensayado \\
+Estación de adquisición & Computadora con sistema operativo, servidor de
+base de datos y sincronización NTP & Almacena las series temporales
+sincronizadas de ambas familias de variables \\
+Estación de análisis & Computadora con entorno de programación Python,
+bibliotecas de análisis de datos, Scikit-learn y Power BI & Ejecuta el
+procesamiento, el modelado y la construcción de tableros \\
+Instrumentación complementaria & Medidor de campo o aplicación de
+medición Wi-Fi para verificación independiente del RSSI; plancha de
+planta del escenario con distancias marcadas & Verificación cruzada del
+instrumento y levantamiento geométrico del escenario \\
+\end{longtable}
+}
+
+La selección del hardware obedece al criterio de costo por nodo
+compatible con despliegues masivos, al que se alude en la PE4; la lista
+de materiales y su presupuesto corresponden a los anexos del documento
+final.
+
+{[}INSERTAR AQUÍ TABLA: Especificación técnica y costos de los
+componentes del prototipo físico ESP32{]}
+
+{[}INSERTAR AQUÍ IMAGEN TÉCNICA: Topología de nodos ESP32 — nodos
+emisores N1–N3, suscriptor y punto de acceso en el escenario
+experimental{]}
+
+\subsubsection{3.1.4. Procedimientos}\label{procedimientos}
+
+La ejecución se organiza en cinco fases secuenciales, con entregables
+verificables en cada una de ellas:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Diseño y construcción del prototipo.} Definición de la
+  arquitectura de mensajes, codificación de los campos de la publicación
+  (identificador de nodo, marca de tiempo de emisión, contador de
+  secuencia, RSSI, SNR, nivel de ruido, escenario y nivel de QoS),
+  integración del \emph{broker} y de la base de datos, y pruebas de
+  integración en mesa.
+\item
+  \textbf{Calibración del instrumento.} Verificación de la
+  sincronización de relojes mediante NTP, medición de referencia en un
+  trayecto conocido para el ajuste del modelo de pérdida de distancia, y
+  validación cruzada del RSSI reportado por el ESP32 con un instrumento
+  independiente. Criterio de salida: error de sincronización y de
+  medición dentro de los tolerancias declarados en el protocolo.
+\item
+  \textbf{Campaña de mediciones.} Ejecución de la matriz factorial
+  completa con el número de réplicas predefinido, en orden aleatorizado
+  de ensayos, registrando todas las condiciones y todo incidente en el
+  cuaderno de campo.
+\item
+  \textbf{Procesamiento y modelado.} Tratamiento estadístico de los
+  datos, verificación de supuestos, análisis de varianza, entrenamiento
+  y validación de los modelos de Machine Learning con Scikit-learn.
+\item
+  \textbf{Comunicación de resultados y validación.} Construcción de los
+  tableros de Power BI, contrastación con el criterio de éxito,
+  aplicación del plan de contingencia cuando corresponda y redacción de
+  conclusiones.
+\end{enumerate}
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Las cinco fases secuenciales de
+ejecución de la investigación con sus entregables verificables{]}
+
+\subsubsection{3.1.5. Protocolo operativo de la campaña de
+mediciones}\label{protocolo-operativo-de-la-campauxf1a-de-mediciones}
+
+El protocolo operativo fija, de manera previa e inmutable durante la
+campaña, las condiciones bajo las cuales se ejecuta cada ensayo del
+diseño factorial 3×3×3. Su objetivo es garantizar que las 27 celdas del
+diseño se midan bajo condiciones homogéneas y comparables, y que la
+variabilidad observada en las respuestas sea atribuible a los factores
+ensayados y no a diferencias de procedimiento.
+
+\textbf{Equipamiento del escenario.} El equipamiento se compone de: (i)
+cuatro placas ESP32 NodeMCU DevKit V1 —tres configuradas como nodos
+emisores N1, N2 y N3 y una como nodo suscriptor—, cargadas con un
+firmware común que incluye la pila TCP/IP, el cliente MQTT y la lectura
+de los índices de radiofrecuencia (RSSI, SNR y nivel de ruido de fondo)
+reportados por el controlador en cada publicación; (ii) un router Wi-Fi
+doméstico operativo en la banda ISM de 2,4 GHz, configurado en un canal
+fijo no solapado —1, 6 u 11, según el verificado mediante análisis de
+espectro previo—, que actúa como punto de acceso y medio de contienda;
+(iii) una estación de adquisición —computadora de escritorio o portátil—
+sobre la cual se instalan el \emph{broker} Mosquitto y la base de datos
+que recibe, enruta y almacena las publicaciones; y (iv) la
+instrumentación complementaria descrita en el apartado 3.1.3. Todos los
+equipos se emplazan conforme a las coordenadas fijadas en el croquis de
+la vivienda y no se desplazan durante la ejecución de una celda.
+
+\textbf{Condiciones de ensayo.} Cada ensayo se ejecuta bajo las
+siguientes condiciones fijas, verificadas antes de su inicio y
+registradas en el cuaderno de campo: sincronización NTP activa y
+verificada en los cuatro nodos y en la estación de adquisición, con el
+desfase observado registrado; tamaño de carga útil constante e idéntico
+en todos los nodos; firmware idéntico y de la misma versión compilada en
+las cuatro placas; estado del entorno residencial conforme a las
+condiciones ambientales fijadas en el apartado 3.1.2; y nivel de
+ocupación humana del escenario nulo o estrictamente constante. Se
+verifica además que el canal Wi-Fi seleccionado no haya sido alterado
+por reinicios o reconexiones del router desde la calibración del
+instrumento.
+
+\textbf{Duración y volumen de cada ensayo.} Cada ensayo tiene una
+duración fija de diez (10) minutos, contados desde el inicio de la
+publicación programada del primer nodo emisor hasta la recepción del
+último mensaje del nodo suscriptor o el cierre de la sesión MQTT en el
+\emph{broker}, lo que ocurra primero. Esta duración se fija con base en
+dos consideraciones: (i) es suficientemente larga para acumular un
+volumen de mensajes representativo incluso en el nivel de carga más
+esparsa, de modo que las métricas de proporción (PDR y pérdida de
+paquetes) se calculen sobre una base muestral estadísticamente
+admisible; y (ii) es suficientemente corta para que las condiciones
+ambientales y de interferencia se mantengan razonablemente estables
+dentro del ensayo, reduciendo la influencia de tendencias temporales
+intra-ensayo. La frecuencia de publicación de cada nodo emisor la
+determina el nivel del factor B vigente en la celda —B1 oferta esparsa,
+B2 oferta moderada, B3 oferta intensa—, definido operacionalmente por el
+intervalo entre publicaciones consecutivas del mismo nodo, cuyos valores
+exactos en milisegundos se fijan antes de la campaña y se reportan en el
+capítulo de resultados.
+
+\textbf{Réplicas y orden aleatorizado.} Cada una de las 27 celdas del
+diseño factorial se ejecuta con tres (3) réplicas independientes, lo que
+arroja un total de 81 ensayos para la campaña completa. La repetición en
+tres réplicas se justifica por la necesidad de estimar la varianza
+intra-celda —requisito del análisis de varianza previsto en el apartado
+3.4.4— y de verificar la reproducibilidad de las métricas dentro de cada
+condición experimental. El orden de ejecución de los 81 ensayos se
+determina mediante una secuencia aleatoria generada antes del inicio de
+la campaña, con el fin de neutralizar el efecto de posibles tendencias
+temporales —variación de la interferencia de redes vecinas, cambios de
+temperatura o de ocupación del entorno residencial a lo largo del día—
+sobre las respuestas medidas. La secuencia aleatoria se registra en el
+cuaderno de campo y se conserva como evidencia de la aleatorización
+efectiva. Se prohíbe la reordenación de ensayos por conveniencia
+operativa una vez iniciada la campaña; si un ensayo debe suspenderse por
+causa de fuerza mayor, se reprograma en la primera ventana disponible y
+la suspensión se documenta.
+
+\textbf{Registro y trazabilidad de cada ensayo.} Cada ensayo genera tres
+registros triangulados —en el nodo emisor (marca de tiempo de emisión,
+RSSI, SNR, nivel de ruido y contador de secuencia), en el nodo
+suscriptor (marca de tiempo de recepción, contador de secuencia y
+verificación de unicidad) y en el \emph{broker} Mosquitto (sesión,
+suscripción, mensaje recibido y confirmación de entrega conforme al
+nivel de QoS ensayado)—, los cuales se consolidan en la base de datos
+bajo una etiqueta única compuesta por el identificador de celda
+(AᵢBⱼCₖ), el número de réplica (1, 2 o 3) y el identificador de
+secuencia del mensaje. A cada ensayo se le asocian, además de los tres
+registros triangulados, la marca de tiempo de inicio y de fin, la
+versión del firmware cargado en las placas, la configuración vigente del
+router (canal, potencia de transmisión, identificador SSID y modo de
+seguridad), la versión del \emph{broker} Mosquitto, la condición
+ambiental del escenario (estado de puertas, ocupación y aparatos
+electrodomésticos) y cualquier incidente operativo registrado por el
+experimentador. Esta información se asienta en el cuaderno de campo,
+instrumento primario de trazabilidad de la campaña cuyo formato se
+describe en los anexos del documento final.
+
+\textbf{Condiciones de parada y reanudación.} Un ensayo se interrumpe y
+se anula —sin contabilizarse como réplica válida— cuando se produce
+cualquiera de los siguientes eventos: (i) desconexión o reinicio no
+programado del router Wi-Fi; (ii) pérdida de sincronización NTP
+verificable en cualquiera de los cuatro nodos; (iii) interrupción del
+servicio del \emph{broker} Mosquitto o de la base de datos en la
+estación de adquisición; (iv) alteración no programada del entorno
+residencial —entrada de ocupantes, apertura o cierre de puertas,
+encendido o apagado de aparatos electrodomésticos relevantes— que
+comprometa la constancia de las condiciones ambientales fijadas. En caso
+de interrupción, se documenta la causa en el cuaderno de campo, se
+restablecen las condiciones de ensayo y se reejecuta el ensayo íntegro
+desde su inicio, en la primera ventana disponible conforme a la
+secuencia aleatorizada. Ningún ensayo interrumpido se contabiliza
+parcialmente: la integridad de cada réplica es condición indispensable
+de su validez.
+
+\subsection{3.2. Esquema de la Propuesta}\label{esquema-de-la-propuesta}
+
+La propuesta se compone de cuatro capas funcionales que se interconectan
+de la siguiente manera:
+
+\begin{verbatim}
+ CAPA 1 — CAPTACIÓN Y EMISIÓN (nodos instrumentados)
+ ┌────────────────────┐   ┌────────────────────┐   ┌────────────────────┐
+ │  Nodo ESP32 (N1)   │   │  Nodo ESP32 (N2)   │   │  Nodo ESP32 (N3)   │
+ │  + marca de tiempo │   │  + marca de tiempo │   │  + marca de tiempo │
+ │  + RSSI / SNR      │   │  + RSSI / SNR      │   │  + RSSI / SNR      │
+ └─────────┬──────────┘   └─────────┬──────────┘   └─────────┬──────────┘
+           └───────────────┬────────┴────────────┬───────────┘
+                           ▼                     ▼
+ CAPA 2 — MEDIO INALÁBRICO     ┌──────────────────────────────┐
+ (Wi-Fi IEEE 802.11, 2,4 GHz)  │ Punto de acceso (canal fijo  │
+ escenarios A1 / A2 / A3       │ no solapado, CSMA/CA, DCF)   │
+                               └──────────────┬───────────────┘
+                                              ▼
+ CAPA 3 — TRANSPORTE Y ALMACENAMIENTO
+                    ┌────────────────────────────────────────┐
+                    │  Broker MQTT (QoS 0 / 1 / 2 = C1/C2/C3) │
+                    └────────────────────┬───────────────────┘
+                                         ▼
+                    ┌────────────────────────────────────────┐
+                    │  Estación de adquisición + base de      │
+                    │  datos (series sincronizadas por NTP)   │
+                    └────────────────────┬───────────────────┘
+                                         ▼
+ CAPA 4 — ANÁLISIS Y COMUNICACIÓN
+          ┌──────────────────────────┬───────────────────────────┐
+          │ Scikit-learn             │ Power BI                  │
+          │ ANOVA 3 factores,        │ tableros de KPI,          │
+          │ modelos de clasificación │ estados del umbral 85 %,  │
+          │ y regresión, importancia │ tendencias por escenario  │
+          │ de predictores           │ y alertas de degradación  │
+          └──────────────────────────┴───────────────────────────┘
+\end{verbatim}
+
+La lectura del esquema es la siguiente: los nodos de la capa 1 emiten
+publicaciones MQTT que contienen, en una misma unidad de registro, la
+variable temporal de la aplicación y los índices de radiofrecuencia; la
+capa 2 condiciona esa transmisión conforme al escenario de propagación
+vigente y a las reglas de acceso al medio; la capa 3 materializa el
+nivel de servicio ensayado y almacena el resultado; y la capa 4
+transforma el conjunto de registros en evidencia estadística, en modelo
+predictivo y en indicadores comunicables. La originalidad de la
+propuesta reside en la capa 1: el instrumento de medición es \emph{el
+propio nodo de la red}, de modo que la obtención de las variables
+físicas no requiere de un analizador de espectro ni de una sonda
+comercial.
+
+{[}INSERTAR AQUÍ IMAGEN TÉCNICA: Diagrama de arquitectura del prototipo
+con las cuatro capas funcionales — captación, medio inalámbrico,
+transporte/almacenamiento y análisis{]}
+
+\subsection{3.3. Variables de la
+Investigación}\label{variables-de-la-investigaciuxf3n}
+
+\textbf{Variables independientes (factores experimentales).}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{A — Escenario de propagación.} Tres niveles operacionalizados
+  en el entorno residencial: A1, visibilidad directa entre emisor y
+  receptor dentro del mismo recinto o de recintos contiguos abiertos,
+  sin muro interpuesto; A2, sin visibilidad directa con exactamente un
+  muro de concreto atravesado por el trayecto radioeléctrico; A3, sin
+  visibilidad directa con doble muro de concreto atravesado o con ruido
+  de fondo ISM elevado.
+\item
+  \textbf{B — Carga de ofrecimiento.} Tres niveles definidos por el
+  intervalo de publicación: B1, oferta esparsa; B2, oferta moderada; B3,
+  oferta intensa.
+\item
+  \textbf{C — Nivel de servicio MQTT.} Tres niveles: C1 (QoS 0), C2 (QoS
+  1) y C3 (QoS 2).
+\end{itemize}
+
+La combinación de los tres factores con tres niveles produce un
+\textbf{diseño factorial completo 3×3×3 con 27 combinaciones de
+tratamiento}.
+
+\textbf{Variables dependientes (respuestas).}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  PDR, en porcentaje — variable de referencia para el umbral del 85\%.
+\item
+  Latencia extremo a extremo, en milisegundos (media y percentil 95).
+\item
+  Jitter, en milisegundos (desviación típica de los retardos).
+\item
+  Pérdida de paquetes, en porcentaje.
+\item
+  Buen uso, en kilobits por segundo.
+\end{enumerate}
+
+\textbf{Variables medidas o covariables físicas} (no manipuladas,
+registradas en cada publicación): RSSI, SNR, nivel de ruido de fondo,
+distancia entre emisor y receptor, número y tipo de obstáculos del
+trayecto.
+
+\textbf{Variables intervinientes o de control:} densidad de nodos fija
+(tres emisores y un suscriptor), canal Wi-Fi fijo no solapado, tamaño de
+carga útil constante, firmware idéntico en todos los nodos, ubicación
+fija del punto de acceso y del \emph{broker}, sincronización NTP activa,
+y horario de ejecución registrado. El control de estas variables es lo
+que permite atribuir las diferencias observadas a los tres factores
+ensayados.
+
+{[}INSERTAR AQUÍ TABLA: Definición operacional de variables —
+independientes (factores A/B/C), dependientes (PDR, latencia, jitter,
+pérdida, buen uso), covariables físicas y de control{]}
+
+\subsection{3.4. Diseño Experimental Factorial
+3×3×3}\label{diseuxf1o-experimental-factorial-333}
+
+\subsubsection{3.4.1. Justificación del
+diseño}\label{justificaciuxf3n-del-diseuxf1o}
+
+El problema descrito en la realidad problemática es de naturaleza
+\emph{interactiva}: se sospecha que la degradación del QoS no es
+aditiva, es decir, que el efecto de una carga elevada sobre la latencia
+no es el mismo en visibilidad directa que tras doble muro, y que el
+nivel de servicio MQTT modula esa diferencia. Un diseño de un solo
+factor a la vez (\emph{one-factor-at-a-time}) es incapaz de detectar
+interacciones y exige un número mayor de ensayos para una cobertura
+menor. El diseño factorial completo estima simultáneamente los tres
+efectos principales y las tres interacciones de dos factores más la de
+tres factores, con eficiencia muestral apreciable, y ofrece además una
+estructura natural para el análisis de varianza.
+
+\subsubsection{3.4.2. Matriz experimental}\label{matriz-experimental}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Factor
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Niveles
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Descripción
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A — Escenario de propagación & A1 / A2 / A3 & Visibilidad directa / un
+muro de concreto / doble muro o ruido ISM elevado \\
+B — Carga de ofrecimiento & B1 / B2 / B3 & Intervalo de publicación
+esparsa / moderado / intenso \\
+C — Nivel de servicio MQTT & C1 / C2 / C3 & QoS 0 / QoS 1 / QoS 2 \\
+\end{longtable}
+}
+
+La matriz resultante contiene las 27 celdas AiBjCk. Cada celda se
+ejecuta con tres réplicas definidas de forma previa, ordenadas
+aleatoriamente en el tiempo para neutralizar el efecto de posibles
+tendencias temporales (variación de la interferencia de red vecina a lo
+largo del día). Cada réplica corresponde a un ensayo de duración fija de
+diez minutos con un número mínimo preestablecido de mensajes publicados
+—según lo fijado en el protocolo operativo del apartado 3.1.5—, de modo
+que las métricas de proporción (PDR, pérdida) se calculen sobre una base
+muestral suficiente.
+
+El volumen total de observaciones resulta de 27 celdas multiplicado por
+el número de réplicas; a cada mensaje individual se le asocian, además
+de su resultado de entrega, su marca de tiempo, los índices de
+radiofrecuencia reportados por el nodo y la etiqueta de celda, lo que
+conforma un conjunto de datos tabular apto tanto para el análisis de
+varianza como para el aprendizaje automático.
+
+{[}INSERTAR AQUÍ TABLA: Matriz completa del diseño factorial 3×3×3 — 27
+celdas A\_iB\_jC\_k con niveles descriptos{]}
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Flujo del diseño factorial 3×3×3 —
+factores, niveles, réplicas y orden aleatorizado de ensayos{]}
+
+\subsubsection{3.4.3. Instrumentación de la
+medición}\label{instrumentaciuxf3n-de-la-mediciuxf3n}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Sincronización.} Todos los nodos sincronizan su reloj por NTP
+  antes de cada ensayo; la latencia de un solo sentido se calcula como
+  diferencia de marcas de tiempo entre publicación y recepción. Como
+  control de calidad, se registra el desfase de sincronización observado
+  en cada sesión.
+\item
+  \textbf{Registro doble.} Cada publicación transporta la información de
+  radiofrecuencia; el suscriptor registra la recepción; el \emph{broker}
+  conserva el registro de entrega y de confirmación. La triangulación de
+  los tres registros permite distinguir un mensaje perdido en el enlace
+  inalámbrico de uno perdido en la cola del \emph{broker}.
+\item
+  \textbf{Etiquetado.} Cada registro lleva los campos de escenario,
+  carga, nivel de QoS, réplica y número de secuencia, lo que permite
+  reconstruir íntegramente la matriz experimental desde la base de
+  datos.
+\item
+  \textbf{Trazabilidad.} Se conservan la versión del firmware, la
+  configuración del punto de acceso, la versión del \emph{broker}, la
+  plancha del escenario con las distancias medidas y el cuaderno de
+  campo.
+\end{itemize}
+
+\subsubsection{3.4.4. Análisis estadístico
+previsto}\label{anuxe1lisis-estaduxedstico-previsto}
+
+El análisis de los datos del diseño se plantea mediante un
+\textbf{análisis de varianza de tres vías} con modelo de efectos fijos:
+
+Y = μ + Ai + Bj + Ck + (AB)ij + (AC)ik + (BC)jk + (ABC)ijk + ε
+
+donde Y es la respuesta considerada (PDR, latencia, jitter, pérdida o
+buen uso) y ε el error experimental. El procedimiento contempla:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Verificación de los supuestos mediante la prueba de Shapiro-Wilk sobre
+  los residuos y la prueba de Levene sobre la homogeneidad de varianzas;
+  cuando las respuestas de proporción violen los supuestos, se aplicará
+  una transformación logarítmica o arcseno sobre los porcentajes, y, en
+  su defecto, se recurrirá a pruebas no paramétricas alternativas.
+\item
+  Estimación de los efectos principales y de las interacciones con un
+  nivel de significancia fijado por adelantado en α = 0,05.
+\item
+  Contrastes de comparación múltiple por el método de Tukey para las
+  diferencias entre niveles de un mismo factor, con intervalos de
+  confianza reportados.
+\item
+  Estimación de tamaños de efecto y de la varianza explicada por cada
+  término del modelo, de modo que la significancia estadística no se
+  interprete desligada de la relevancia práctica.
+\item
+  Verificación del cumplimiento o incumplimiento del umbral del 85\%
+  celda por celda, con el intervalo de confianza correspondiente.
+\end{enumerate}
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Procedimiento del ANOVA de tres vías —
+verificación de supuestos, efectos e interacciones, contrastes de Tukey
+y verificación del umbral{]}
+
+\subsubsection{3.4.5. Proceso de aprendizaje automático sobre la misma
+base de
+datos}\label{proceso-de-aprendizaje-automuxe1tico-sobre-la-misma-base-de-datos}
+
+Sobre el mismo conjunto de registros, y respondiendo a la PE3, se
+ejecutará el siguiente flujo: separación de predictores (índices de
+radiofrecuencia, distancia, escenario, carga, nivel de QoS) y de
+variable objetivo (estado de cumplimiento del umbral y, en la vertiente
+de regresión, los valores de latencia y jitter); partición estratificada
+entre entrenamiento y prueba; preprocesamiento con imputación y escalado
+cuando el algoritmo lo requiera; ajuste de una línea base de regresión
+regularizada y de modelos de árbol y ensamble; búsqueda de
+hiperparámetros mediante validación cruzada; y evaluación final con las
+métricas definidas en el marco teórico. El detalle de este procedimiento
+se describe en el Capítulo IV, donde se presenta íntegramente en modo
+proyectado.
+
+\subsection{3.5. Criterio de Éxito: Umbral del 85\% y Plan de
+Contingencia}\label{criterio-de-uxe9xito-umbral-del-85-y-plan-de-contingencia}
+
+\subsubsection{3.5.1. Definición operacional del
+umbral}\label{definiciuxf3n-operacional-del-umbral}
+
+El \textbf{umbral del 85\%} se establece como \emph{criterio de éxito
+metodológico} y se opera en dos vertientes:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Vertiente de red.} La celda experimental se considera que
+  alcanza el criterio cuando la razón de entrega de tramas (PDR) es
+  igual o superior al 85\%, con su intervalo de confianza
+  correspondiente. La PDR se elige como métrica de referencia por ser la
+  expresión directa de la confiabilidad entregada al usuario final y por
+  ser una proporción directamente interpretable.
+\item
+  \textbf{Vertiente de modelado.} El modelo de Machine Learning se
+  considera que alcanza el criterio cuando su desempeño en validación
+  cruzada —exactitud y, de manera complementaria, el puntaje \emph{F}1—
+  es igual o superior al 85\%.
+\end{itemize}
+
+La fijación del umbral \emph{antes} de la recolección es una decisión de
+diseño metodológico: elimina la tentación de redefinir el criterio con
+base en los resultados observados y convierte tanto el cumplimiento como
+el incumplimiento en resultados interpretables. En consecuencia, la
+investigación no se condiciona a que el 85\% se alcance: se condiciona a
+que el 85\% se \emph{verifique con rigor} y a que, si no se alcanza, se
+diagnostique técnicamente la causa mediante el procedimiento que sigue.
+
+\subsubsection{3.5.2. Plan de contingencia de cinco
+pasos}\label{plan-de-contingencia-de-cinco-pasos}
+
+El plan se activa automáticamente cuando (i) ninguna celda del diseño
+alcanza la PDR del 85\%, (ii) las celdas que lo alcanzan no son
+reproducibles entre réplicas, o (iii) el modelo predictivo no alcanza la
+exactitud del 85\% en validación cruzada. Sus cinco pasos son
+secuenciales, excluyentes en su orden y cada uno posee un criterio de
+cierre explícito.
+
+\textbf{Paso 1 — Verificación del instrumental y de la trazabilidad.}
+Acción: revisar la sincronización de relojes y su desfase registrado, la
+integridad del firmware y su versión, la configuración vigente del punto
+de acceso y del \emph{broker}, la continuidad del registro en la base de
+datos y la correspondencia entre los tres registros (nodo, suscriptor y
+\emph{broker}). Se repite una medición de referencia en un trayecto
+conocido y se contrasta el RSSI con el instrumento independiente.
+Criterio de cierre: se confirma que el instrumento produce registros
+íntegros y consistentes, o se corrige la falla detectada y se reinicia
+la campaña desde el punto afectado.
+
+\textbf{Paso 2 — Re-aislamiento de causas exógenas.} Acción: verificar
+mediante análisis espectral o revisión de la configuración la presencia
+de redes vecinas, interferentes o actividad anómala no previstas;
+repetir los ensayos afectados en horario de menor actividad y en canal
+verificado; documentar las condiciones ambientales y de ocupación del
+escenario. Criterio de cierre: se identifica y se acota o se documenta
+como condición permanente del escenario la fuente exógena de
+degradación.
+
+\textbf{Paso 3 — Ampliación de la evidencia.} Acción: aumentar el número
+de réplicas de las celdas infractoras, extender la duración de los
+ensayos, revisar con criterios predefinidos —y no \emph{ad hoc}— la
+posible exclusión de valores atípicos justificados documentalmente, y
+evaluar la estabilidad de las estimaciones mediante el análisis de la
+variabilidad entre réplicas. Criterio de cierre: se dispone de una
+estimación con intervalo de confianza lo bastante estrecho como para
+afirmar si el incumplimiento es real o producto de varianza muestral
+insuficiente.
+
+\textbf{Paso 4 — Reajuste de parámetros configurables del prototipo y
+del protocolo.} Acción: modificar parámetros de configuración —no de
+medición— con fundamento técnico: selección de canal Wi-Fi no solapado
+distinto, ajuste de la potencia de transmisión si el hardware lo
+permite, tamaño de carga útil, intervalo de \emph{keep alive},
+temporizadores de sesión, profundidad de reintentos y nivel de servicio
+MQTT. Se vuelve a ejecutar únicamente la submatriz de celdas afectadas.
+Criterio de cierre: se identifica la configuración que alcanza el umbral
+y se documenta como recomendación operativa, o se demuestra que ningún
+ajuste de parámetros disponible permite alcanzarlo dentro de las
+condiciones ensayadas.
+
+\textbf{Paso 5 — Formalización de la desviación y re-umbralización
+documentada.} Acción: si los pasos 1 a 4 no conducen al cumplimiento, se
+emite un informe técnico de desviación que contiene: las celdas y
+métricas afectadas, el umbral alcanzado con su intervalo de confianza,
+el historial de acciones ejecutadas con su resultado, el diagnóstico
+técnico de la causa y la propuesta de umbral alternativo debidamente
+justificada. Los resultados se reportan íntegros, sin exclusión de
+celdas ni modificación de datos recolectados; el umbral original se
+conserva en la memoria del documento como referencia y el nuevo se
+declara como \emph{objetivo condicional} para futuras iteraciones.
+Criterio de cierre: el informe de desviación queda incorporado al
+capítulo de resultados y a las recomendaciones, con decisión explícita
+del asesor.
+
+\textbf{Regla rectora del plan.} En ningún caso se modifica
+retroactivamente el umbral sobre datos ya recolectados, no se eliminan
+celdas del diseño sin registro documentado y no se declaran resultados
+selectivamente: la integridad del protocolo experimental prevalece sobre
+el cumplimiento del criterio.
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Plan de contingencia de 5 pasos —
+condiciones de activación, acciones y criterios de cierre de cada
+paso{]}
+
+\subsection{3.6. Alcance de la
+Investigación}\label{alcance-de-la-investigaciuxf3n}
+
+\textbf{Alcance por intervención.} La investigación \emph{diseña,
+construye, instrumenta y valida} un prototipo de evaluación de QoS;
+\emph{ejecuta} una campaña de mediciones estructurada bajo un diseño
+factorial 3×3×3; \emph{analiza} los datos con métodos estadísticos y de
+aprendizaje automático; y \emph{comunica} los resultados mediante
+tableros. No se trata de una investigación orientada a la instalación
+permanente de una red, sino a la validación de un método de medición y
+de predicción.
+
+\textbf{Alcance tecnológico.} Se evalúa exclusivamente el enlace Wi-Fi
+IEEE 802.11 en la banda ISM de 2,4 GHz y el transporte MQTT sobre
+TCP/IP. Quedan fuera de alcance las tecnologías de área personal (IEEE
+802.15.4, Bluetooth Low Energy), las bandas de 5 y 6 GHz, los mecanismos
+de planificación de capa física (MIMO de alto orden, modulation coding
+scheme adaptativo gestionado por terceros), las redes mesh de salto
+múltiple y los protocolos alternativos de transporte (CoAP, AMQP), cuyo
+estudio se postula como línea futura.
+
+\textbf{Alcance espacial.} Se limita a los interiores de la vivienda que
+constituye el escenario experimental —una o dos plantas, con propagación
+intra-planta—; no se evalúa penetración entre pisos ni escenarios
+exteriores.
+
+\textbf{Alcance de densidad.} La densidad de nodos se mantiene constante
+y de valor moderado para aislar el efecto de los tres factores
+ensayados; el efecto de la densidad como factor adicional queda
+explícitamente fuera del alcance de esta iteración y se propone como
+extensión del diseño a un factorial de cuatro factores.
+
+\textbf{Alcance de seguridad y privacidad.} No se evalúa el desempeño de
+los mecanismos de cifrado ni se incorporan ataques o condiciones
+adversariales; se garantiza, en cambio, que la captura de datos se
+limite a métricas de red y de radiofrecuencia, sin registro de
+contenido.
+
+\textbf{Alcance de viabilidad económica.} Se reporta la estimación de
+costo por nodo y de la ausencia de infraestructura centralizada como
+argumento de viabilidad, sin llevar a cabo un estudio de costo-vida útil
+ni una comparación de mercado exhaustiva.
+
+\textbf{Alcance temporal.} Corresponde al periodo de ejecución previsto
+en el cronograma del plan de tesis, organizado en las cinco fases
+descritas en el apartado 3.1.4.
+
+\subsection{3.7. Propuesta de
+Validación}\label{propuesta-de-validaciuxf3n}
+
+La validación de la propuesta se estructura sobre cuatro mecanismos
+complementarios que garantizan la rigurosidad científica de los
+resultados:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Validación instrumental.} Contraste del RSSI reportado por el
+  ESP32 contra un instrumento independiente; verificación de la
+  sincronización de relojes; medición de referencia en trayecto conocido
+  antes y después de la campaña. Toda discrepancia superior al
+  tolerancia declarado se corrige antes de iniciar la recolección.
+\item
+  \textbf{Validación experimental.} Replicabilidad: cada celda se
+  ejecuta en tres réplicas con orden aleatorizado, conforme al protocolo
+  operativo del apartado 3.1.5; los tres registros (nodo, suscriptor,
+  \emph{broker}) se triangulan para cada mensaje; las condiciones de
+  ensayo se documentan de modo que una tercera parte pudiera reproducir
+  la campaña.
+\item
+  \textbf{Validación estadística.} Verificación explícita de los
+  supuestos del ANOVA, reporte de tamaños de efecto e intervalos de
+  confianza, corrección por comparaciones múltiples y, para el modelado,
+  partición entrenamiento–prueba con validación cruzada y fijación de
+  semillas aleatorias para la reproducibilidad.
+\item
+  \textbf{Validación de utilidad.} Contrastación del instrumento frente
+  a una línea base: el mismo enlace evaluado sin la instrumentación
+  cruzada y las métricas que una operación convencional reportaría, de
+  modo que se demuestre que el prototipo aporta información adicional
+  utilizable. La capa de tableros se somete a verificación de
+  coherencia: cada indicador visualizado debe poder rastrearse hasta la
+  celda experimental y al registro original que lo sustenta.
+\end{enumerate}
+
+Adicionalmente, se prevé una \emph{revisión de hallazgos} con el asesor
+antes del procesamiento final, con el fin de confirmar que la
+interpretación de los resultados se mantiene dentro del marco hipotético
+planteado y que el plan de contingencia, en caso de activarse, se
+ejecuta conforme a los cinco pasos establecidos y en el orden fijado.
+
+\section{CAPÍTULO IV: ANÁLISIS E INTERPRETACIÓN DE LOS
+RESULTADOS}\label{capuxedtulo-iv-anuxe1lisis-e-interpretaciuxf3n-de-los-resultados}
+
+\textbf{Modalidad de redacción.} El presente capítulo se formula
+íntegramente en \emph{modo proyectado}: los verbos corresponden al
+tiempo futuro y al condicional. La redacción en estos tiempos obedece a
+una razón de rigor: la campaña de mediciones no se ha ejecutado y, por
+tanto, no existen resultados que reportar. Este documento describe el
+análisis \emph{previsto}, los procedimientos que \emph{se ejecutarán},
+los criterios que \emph{se aplicarán} y las ramas de interpretación que
+\emph{se activarían} según el comportamiento de los datos. En ningún
+apartado se anticipan valores numéricos de medición, de desempeño de
+modelos o de indicadores de tablero: toda cifra que aparezca
+corresponderá exclusivamente a un umbral, a un nivel de factor o a un
+parámetro metodológico fijado por adelantado en los capítulos
+precedentes.
+
+\subsection{4.1. Consideraciones Generales y Plan de
+Análisis}\label{consideraciones-generales-y-plan-de-anuxe1lisis}
+
+El plan de análisis seguirá la secuencia fijada en el protocolo
+experimental: primero \emph{preparar} los datos, luego \emph{describir}
+y \emph{verificar} su calidad estadística, después \emph{estimar los
+efectos} del diseño factorial, a continuación \emph{construir y validar}
+los modelos de aprendizaje automático, y finalmente \emph{comunicar} los
+hallazgos mediante tableros y \emph{contrastarlos} con las preguntas de
+investigación. Cada etapa posee un producto verificable y un criterio de
+paso a la etapa siguiente.
+
+El análisis se regirá por tres principios: (i) \emph{integridad} —no se
+excluirán celdas ni observaciones sin registro documentado—; (ii)
+\emph{reproducibilidad} —se fijarán semillas aleatorias, se versionará
+el conjunto de datos y se conservará el \emph{pipeline} completo de
+análisis—; y (iii) \emph{trazabilidad} —cada indicador publicado deberá
+poder rastrearse hasta el registro original que lo sustenta. La base de
+datos resultante de la campaña se denominará, de aquí en adelante, el
+\emph{conjunto de mediciones}.
+
+\subsection{4.2. Tratamiento y Preparación de los
+Datos}\label{tratamiento-y-preparaciuxf3n-de-los-datos}
+
+El conjunto de mediciones \emph{será} integrado desde tres registros
+convergentes: el registro de publicación de los nodos emisores, el
+registro de recepción de la estación suscriptora y el registro del
+\emph{broker} MQTT. El primer paso \emph{consistirá} en la unión de los
+tres conjuntos por el identificador único de mensaje y el número de
+secuencia, operación que \emph{permitirá} discriminar la pérdida
+ocurrida en el enlace inalámbrico de la pérdida ocurrida en la cola del
+\emph{broker}.
+
+Sobre la tabla unificada \emph{se ejecutarán} las siguientes
+operaciones, en el orden indicado:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Verificación de integridad.} \emph{Se comprobará} la
+  continuidad de los números de secuencia, la existencia de marcas de
+  tiempo válidas, la ausencia de campos nulos en las variables críticas
+  y la correspondencia entre el número de mensajes publicados y el
+  número de registros almacenados. Los registros inconsistentes
+  \emph{serán} marcados y, en su caso, \emph{serán} excluidos únicamente
+  con causa documentada en el cuaderno de campo.
+\item
+  \textbf{Verificación de sincronización.} \emph{Se analizará} el
+  desfase de los relojes informado por cada sesión de NTP; cuando el
+  desfase \emph{supere} la tolerancia declarada en el protocolo, la
+  sesión respectiva \emph{será} declarada inválida y sus ensayos
+  \emph{se repetirán}.
+\item
+  \textbf{Construcción de variables derivadas.} \emph{Se calcularán} la
+  latencia de un solo sentido y la latencia de ida y vuelta a partir de
+  las marcas de tiempo, el jitter como desviación típica de las series
+  móviles de retardo, la PDR y la pérdida como proporciones por celda y
+  por réplica, el buen uso como carga útil por unidad de tiempo y los
+  índices de radiofrecuencia como promedios y percentiles por ensayo.
+\item
+  \textbf{Codificación de factores.} Los escenarios, los niveles de
+  carga y los niveles de QoS \emph{serán} codificados como variables
+  categóricas ordenadas, y la etiqueta de celda factorial \emph{será}
+  reconstruida de modo que cada observación \emph{quede} identificada
+  con su combinación AiBjCk.
+\item
+  \textbf{Detección de anomalías.} \emph{Se aplicarán} criterios
+  univariados predefinidos —basados en rangos intercuartílicos— para
+  identificar valores atípicos; los valores detectados \emph{serán}
+  inspeccionados contra el cuaderno de campo y \emph{se conservarán} en
+  el conjunto de análisis salvo que exista evidencia documentada de
+  falla instrumental.
+\item
+  \textbf{Estructuración para el modelado.} \emph{Se conformarán} la
+  matriz de predictores —RSSI, SNR, nivel de ruido, distancia,
+  escenario, carga y nivel de QoS— y las variables objetivo —estado de
+  cumplimiento del umbral, latencia y jitter—, con una partición
+  estratificada entre entrenamiento y prueba que \emph{se mantendrá}
+  inmutable durante toda la fase de modelado.
+\end{enumerate}
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Flujo de tratamiento y preparación de
+datos — unión de tres registros, verificación, variables derivadas,
+codificación, detección de anomalías y partición{]}
+
+\subsection{4.3. Análisis Descriptivo y Verificación de
+Supuestos}\label{anuxe1lisis-descriptivo-y-verificaciuxf3n-de-supuestos}
+
+\emph{Se calcularán} estadísticos descriptivos —media, mediana,
+desviación típica, coeficiente de variación y percentiles 50, 95 y 99—
+para cada métrica de QoS desagregada por factor y por celda. \emph{Se
+construirán} histogramas y gráficos de caja por celda, que
+\emph{permitirán} visualizar la asimetría de las distribuciones de
+latencia, la presencia de colas largas asociadas a retransmisiones y la
+dispersión de la PDR entre réplicas. \emph{Se elaborarán} mapas de calor
+de PDR y de latencia media sobre las 27 celdas del diseño, cuya lectura
+preliminar \emph{ofrecerá} una primera imagen del terreno de
+cumplimiento del umbral.
+
+Para cada variable respuesta \emph{se verificarán} los supuestos del
+modelo de análisis de varianza: normalidad de los residuos mediante la
+prueba de Shapiro-Wilk, homogeneidad de varianzas mediante la prueba de
+Levene y aditividad del modelo. Cuando la normalidad \emph{resulte}
+rechazada, \emph{se aplicarán} transformaciones —logarítmica para la
+latencia, arcseno para las proporciones— y, si los supuestos
+\emph{persisten} incumplidos, \emph{se recurrirá} a la alternativa no
+paramétrica correspondiente, cuyo resultado \emph{se reportará} en
+paralelo al del modelo paramétrico. La decisión tomada \emph{quedará}
+documentada con su justificación antes de proceder a los contrastes.
+
+{[}INSERTAR AQUÍ GRÁFICO: Comportamiento previsto de la latencia extremo
+a extremo frente a la carga de ofrecimiento, diferenciado por nivel de
+QoS MQTT{]}
+
+{[}INSERTAR AQUÍ GRÁFICO: Mapa de calor previsto de PDR y latencia media
+sobre las 27 celdas del diseño factorial{]}
+
+\subsection{4.4. Análisis del Diseño Factorial
+3×3×3}\label{anuxe1lisis-del-diseuxf1o-factorial-333}
+
+\emph{Se ajustará} el modelo de análisis de varianza de tres vías con
+interacciones para cada variable respuesta, conforme a la expresión
+definida en el capítulo metodológico. La lectura de resultados
+\emph{seguirá} un orden fijo:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Se evaluará}, en primer lugar, la interacción de tres factores
+  A×B×C; si \emph{resulta} significativa, la interpretación \emph{se
+  hará} por capas de factores, ya que los efectos principales
+  \emph{dejarían} de ser interpretables aisladamente.
+\item
+  \emph{Se estimarán} las interacciones de dos factores (A×B, A×C, B×C),
+  con especial atención a A×B —la dependencia del efecto de la carga
+  respecto del escenario de propagación— y a B×C —la dependencia del
+  efecto de la carga respecto del nivel de servicio MQTT—, que
+  corresponden al núcleo de la hipótesis de trabajo.
+\item
+  \emph{Se cuantificarán} los efectos principales de cada factor, con
+  sus intervalos de confianza y sus tamaños de efecto.
+\item
+  \emph{Se aplicarán} contrastes de comparación múltiple por el método
+  de Tukey para establecer, dentro de cada factor, qué niveles difieren
+  significativamente.
+\item
+  \emph{Se calculará} la contribución porcentual de cada término a la
+  varianza total, indicador que \emph{será} utilizado para ordenar los
+  hallazgos por relevancia práctica y no únicamente por significancia
+  estadística.
+\end{enumerate}
+
+Sobre la base del mismo modelo, \emph{se elaborarán} los intervalos de
+confianza de la PDR por celda y \emph{se clasificarán} las 27 celdas en
+dos categorías: aquellas cuyo intervalo \emph{se ubica} íntegramente por
+encima del umbral del 85\%, aquellas cuyo intervalo \emph{se ubica}
+íntegramente por debajo y aquellas cuyo intervalo \emph{lo atraviesa},
+categoría que \emph{será} interpretada como evidencia insuficiente y, en
+consecuencia, \emph{activará} el paso de ampliación de evidencia del
+plan de contingencia.
+
+{[}INSERTAR AQUÍ GRÁFICO: Diagrama de interacciones previsto — A×B, A×C,
+B×C y contribución porcentual de cada término a la varianza total{]}
+
+\subsection{4.5. Contrastación del Umbral del
+85\%}\label{contrastaciuxf3n-del-umbral-del-85}
+
+La contrastación \emph{se efectuará} en las dos vertientes definidas en
+el capítulo metodológico. En la vertiente de red, \emph{se verificará}
+si la PDR de cada celda alcanza o supera el 85\%; \emph{se determinará}
+el número y la identidad de las celdas cumplidoras; y \emph{se
+describirá} el patrón de distribución del cumplimiento a lo largo de los
+factores. En la vertiente de modelado, \emph{se verificará} si el
+desempeño del modelo en validación cruzada alcanza o supera el 85\% de
+exactitud y, de manera complementaria, si el puntaje \emph{F}1 respalda
+ese resultado.
+
+Las ramas de decisión \emph{quedarán} formuladas de la siguiente manera:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Si} la vertiente de red alcanza el umbral en la mayoría de las
+  celdas y el patrón \emph{resulta} coherente con lo previsto
+  teóricamente —mejor desempeño en visibilidad directa, degradación
+  creciente con la carga y diferencias ordenadas entre niveles de QoS—,
+  \emph{se concluirá} que el prototipo permite verificar el criterio de
+  éxito y \emph{se aceptará} la hipótesis de trabajo en esa dimensión.
+\item
+  \textbf{Si} el cumplimiento \emph{resulta} parcial y concentrado en
+  condiciones específicas, \emph{se concluirá} que el umbral es
+  alcanzable sólo bajo condiciones delimitadas, \emph{se identificarán}
+  las fronteras operativas y \emph{se formularán} recomendaciones de
+  configuración para cada escenario.
+\item
+  \textbf{Si} ninguna celda \emph{alcanza} el umbral, \emph{se activará}
+  el plan de contingencia de cinco pasos en el orden establecido, y el
+  análisis \emph{continuará} únicamente después de cerrar cada paso con
+  su criterio correspondiente.
+\item
+  \textbf{Si} el modelo predictivo no alcanza la exactitud del 85\%,
+  \emph{se discriminará} si la causa \emph{reside} en la insufuencia de
+  predictores, en el desbalance de clases, en la varianza intrínseca de
+  la respuesta o en la especificación del algoritmo, y \emph{se
+  procederá} conforme a los pasos 3, 4 y 5 del plan de contingencia.
+\end{itemize}
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Árbol de decisión de contrastación del
+umbral del 85\% — vertiente de red, vertiente de modelado y activación
+del plan de contingencia{]}
+
+\subsection{4.6. Modelado con
+Scikit-learn}\label{modelado-con-scikit-learn}
+
+La fase de modelado \emph{se ejecutará} en el entorno de Python
+empleando la biblioteca Scikit-learn, siguiendo un flujo reproducible de
+seis etapas.
+
+\textbf{Etapa 1 — Partición y preprocesamiento.} El conjunto de datos
+\emph{será} dividido en entrenamiento y prueba con estratificación
+cuando la variable objetivo sea discreta; \emph{se aplicarán}
+codificación de variables categóricas, imputación de ausentes y escalado
+de variables continuas mediante canalizaciones (\emph{pipelines}) que
+\emph{se ajustarán} exclusivamente sobre el conjunto de entrenamiento,
+con el propósito de evitar la fuga de información.
+
+\textbf{Etapa 2 — Selección de familias de modelos.} \emph{Se
+entrenarán}, como mínimo, cuatro modelos: una regresión logística como
+línea base interpretable, un árbol de decisión como modelo de referencia
+no lineal, un bosque aleatorio como método de ensamble principal y una
+regresión con regularización Ridge como línea base de la vertiente
+continua. La selección \emph{no} se hará a priori: \emph{se compararán}
+con las mismas métricas y el mismo esquema de validación.
+
+\textbf{Etapa 3 — Ajuste de hiperparámetros.} \emph{Se buscarán} las
+configuraciones óptimas mediante validación cruzada en \emph{k} pliegues
+con búsqueda en malla o aleatorizada —número y profundidad de
+estimadores, mínimo de muestras por hoja, parámetro de regularización—,
+asegurando que la partición de prueba \emph{permanezca} intacta durante
+toda la búsqueda.
+
+\textbf{Etapa 4 — Evaluación.} Sobre el conjunto de prueba \emph{se
+calcularán} exactitud, precisión, sensibilidad, especificidad, puntaje
+\emph{F}1, área bajo la curva ROC y matriz de confusión para la
+clasificación; y error absoluto medio, raíz del error cuadrático medio y
+coeficiente de determinación para la regresión. Los resultados \emph{se
+reportarán} con sus intervalos de confianza obtenidos por remuestreo.
+
+\textbf{Etapa 5 — Interpretabilidad.} \emph{Se obtendrán} la importancia
+de atributos del bosque aleatorio y los coeficientes de la regresión
+regularizada; \emph{se contrastarán} ambos criterios; y \emph{se
+verificará} si los predictores de radiofrecuencia y de configuración
+—RSSI, SNR, distancia, carga y nivel de QoS— figuran entre los más
+relevantes. Este paso \emph{será} el que vincule el modelo con el marco
+físico de la investigación: un modelo con desempeño elevado pero cuyos
+predictores dominantes \emph{sean} ajenos al problema planteado
+\emph{será} considerado insuficiente para los fines de la tesis.
+
+\textbf{Etapa 6 — Comparación y selección.} \emph{Se elegirá} el modelo
+que ofrezca el mejor compromiso entre desempeño, estabilidad entre
+pliegues e interpretabilidad, y \emph{se documentarán} las razones de la
+selección. \emph{Se conservarán} el modelo serializado, la semilla
+aleatoria y la configuración final, de modo que su evaluación
+\emph{pueda} repetirse de forma idéntica.
+
+\textbf{Ramas condicionales.} Si el modelo seleccionado alcanza la
+exactitud y el puntaje \emph{F}1 del 85\% en validación cruzada y en el
+conjunto de prueba, \emph{se concluirá} que la correlación entre
+variables físicas de radiofrecuencia y variables dinámicas de red
+\emph{es} modelable con precisión suficiente para fines de evaluación de
+QoS, y \emph{se aceptará} la hipótesis en esa dimensión. Si el desempeño
+\emph{resulta} inferior, \emph{se analizarán} las causas técnicas
+—predictores insuficientes, ruido de medición, efecto de factores no
+controlados, tamaño muestral, desbalance de clases—, \emph{se aplicarán}
+los ajustes correspondientes y, en última instancia, \emph{se reportará}
+el desempeño alcanzado sin forzar el cumplimiento. Si la importancia de
+predictores \emph{mostrara} que el nivel de QoS o la carga dominan al
+RSSI, \emph{se concluirá} que el comportamiento de la red interior en
+las condiciones ensayadas está gobernado más por la capa de aplicación y
+de acceso que por la atenuación, hallazgo que \emph{sería} coherente con
+la hipótesis de conflicto estructural entre capas planteada en la
+introducción.
+
+{[}INSERTAR AQUÍ FLUJOGRAMA DE: Pipeline de Machine Learning con
+Scikit-learn — 6 etapas: partición, selección de familias, ajuste de
+hiperparámetros, evaluación, interpretabilidad y selección final{]}
+
+\subsection{4.7. Visualización y Tableros en Power
+BI}\label{visualizaciuxf3n-y-tableros-en-power-bi}
+
+Los resultados \emph{serán} trasladados a Power BI mediante la
+importación del conjunto de mediciones y de las tablas resumen
+producidas por el análisis estadístico y por las predicciones del
+modelo.
+
+\textbf{Modelado de datos.} \emph{Se construirá} un modelo estrella: una
+tabla de hechos con una fila por mensaje o por ensayo, y tablas de
+dimensión por escenario de propagación, nivel de carga, nivel de QoS,
+celda factorial y calendario. \emph{Se definirán} relaciones unívocas
+entre hechos y dimensiones y \emph{se verificará} la cardinalidad antes
+de publicar.
+
+\textbf{Medidas y lógica de negocio.} \emph{Se crearán} medidas de DAX
+para la PDR, la pérdida, la latencia media y percentil 95, el jitter, el
+buen uso y el porcentaje de celdas que cumplen el umbral, incluyendo el
+cálculo condicional de cumplimiento respecto del 85\% y la variación de
+cada indicador respecto de la línea base. Todas las medidas \emph{serán}
+validadas mediante contraste manual contra los valores calculados
+directamente en el entorno de análisis.
+
+\textbf{Tableros previstos.} \emph{Se diseñarán} al menos tres tableros:
+(i) un \emph{tablero de estado}, con semáforos de cumplimiento del
+umbral por celda y por métrica; (ii) un \emph{tablero de diagnóstico},
+con series temporales de latencia y jitter, mapas de calor por escenario
+y distribuciones de RSSI; y (iii) un \emph{tablero predictivo}, con la
+comparación entre los valores medidos y los valores estimados por el
+modelo, la importancia de predictores y el porcentaje de aciertos de
+clasificación. \emph{Se configurarán} filtros cruzados por escenario,
+carga y nivel de QoS, así como la posibilidad de profundizar
+(\emph{drill-through}) desde el indicador agregado hasta el registro
+individual.
+
+\textbf{Verificación de coherencia.} Antes de la publicación, \emph{se
+contrastará} cada indicador visualizado contra el valor calculado en el
+procesamiento estadístico; cualquier discrepancia \emph{impedirá} la
+publicación del tablero hasta ser resuelta. Los tableros \emph{quedarán}
+enlazados al conjunto de mediciones versionado, de modo que su
+actualización \emph{sea} reproducible ante la adición de nuevas
+campañas.
+
+{[}INSERTAR AQUÍ TABLA: Modelo estrella y esquema de relaciones para los
+tableros de control en Power BI{]}
+
+{[}INSERTAR AQUÍ IMAGEN TÉCNICA: Esquema de los tableros de Power BI —
+estado, diagnóstico y predictivo, con filtros cruzados y
+drill-through{]}
+
+\subsection{4.8. Interpretación y Contrastación con las Preguntas de
+Investigación}\label{interpretaciuxf3n-y-contrastaciuxf3n-con-las-preguntas-de-investigaciuxf3n}
+
+La interpretación \emph{se organizará} siguiendo el sistema de preguntas
+formulado en el capítulo introductorio:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Respecto de la PE1.} \emph{Se evaluará} el ajuste del modelo
+  de pérdida de trayecto calibrado al escenario mediante el error medio
+  cuadrático y el coeficiente de determinación, y \emph{se discutirá} la
+  correspondencia entre el RSSI observado y la condición de obstrucción
+  de cada escenario. Si el modelo \emph{resulta} adecuado, \emph{se
+  afirmará} que la familia de variables físicas del instrumento es
+  representativa del canal; de lo contrario, \emph{se explicitarán} las
+  fuentes de dispersión no capturadas —multipropagación, ocupación del
+  local, interferencia vecina— y su efecto sobre el análisis posterior.
+\item
+  \textbf{Respecto de la PE2.} \emph{Se interpretarán} los efectos
+  principales e interacciones del factorial a la luz de los marcos
+  teóricos del acceso al medio y de la semántica de confirmación de
+  MQTT: \emph{se examinará}, por ejemplo, si la sobrecarga asociada al
+  nivel QoS 2 \emph{se incrementa} con la carga y si esa dependencia
+  \emph{se atenúa} o \emph{se agrava} según el escenario de propagación.
+  Los hallazgos \emph{se contrastarán} con el ordenamiento cualitativo
+  reportado en el estado del arte, \emph{se señalarán} las coincidencias
+  y las divergencias y \emph{se argumentarán} estas últimas a partir de
+  las diferencias de entorno y de carga.
+\item
+  \textbf{Respecto de la PE3.} \emph{Se discutirá} el desempeño relativo
+  de los algoritmos evaluados, la estabilidad entre pliegues, la
+  estructura de importancia de predictores y la capacidad del modelo
+  para discriminar el cumplimiento del umbral. \emph{Se relacionará} la
+  magnitud de la contribución de los predictores de radiofrecuencia con
+  la importancia que el estado del arte les atribuye en contextos
+  distintos.
+\item
+  \textbf{Respecto de la PE4.} \emph{Se evaluará} la utilidad del
+  instrumento a partir de la cobertura de información que aporta
+  respecto de la operación convencional, la trazabilidad de los tableros
+  y la estimación de costo por nodo, y \emph{se situará} el resultado en
+  una escala explícita de madurez tecnológica.
+\end{itemize}
+
+La contrastación final \emph{incluirá} una tabla de correspondencia
+entre cada pregunta, cada objetivo específico, la evidencia producida y
+la conclusión alcanzada, de modo que la coherencia interna del trabajo
+\emph{pueda} verificarse de un solo vistazo.
+
+{[}INSERTAR AQUÍ TABLA: Matriz de correspondencia PE1–PE4 — pregunta,
+objetivo específico, evidencia producida y conclusión prevista{]}
+
+\subsection{4.9. Validación, Límites y Amenazas a la
+Validez}\label{validaciuxf3n-luxedmites-y-amenazas-a-la-validez}
+
+\emph{Se someterá} el conjunto de resultados a cuatro controles de
+validez:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Validez interna.} \emph{Se verificará} que las diferencias
+  observadas \emph{sean} atribuibles a los factores ensayados,
+  descartando por registro documentado interferencias exógenas no
+  controladas; \emph{se revisará} si el orden aleatorio de los ensayos
+  \emph{neutralizó} posibles tendencias temporales.
+\item
+  \textbf{Validez externa.} \emph{Se discutirá} cuidadosamente la
+  transferibilidad de los hallazgos a escenarios distintos del ensayado,
+  considerando la banda de operación, la densidad fija de nodos, la
+  geometría de las instalaciones y el protocolo de transporte evaluado.
+\item
+  \textbf{Validez de constructo.} \emph{Se argumentará} en qué medida la
+  PDR y la exactitud del modelo \emph{representan} la noción de calidad
+  de servicio definida en el marco teórico, y \emph{se reconocerán} los
+  aspectos de la experiencia de calidad que el instrumento no captura
+  —carga de trabajo del usuario, semántica de la aplicación, seguridad—.
+\item
+  \textbf{Fiabilidad.} \emph{Se reportarán} la repetibilidad de las
+  métricas entre réplicas, la consistencia entre los tres registros
+  convergentes y la reproducibilidad del análisis completo a partir del
+  conjunto de datos versionado.
+\end{itemize}
+
+\textbf{Límites previstos.} \emph{Se anticipa} que los resultados quedan
+delimitados a la banda de 2,4 GHz, a una densidad de nodos constante y a
+interiores de una planta; que la interferencia de redes vecinas no
+controladas \emph{podría} introducir varianza no atribuible a los
+factores; y que el tamaño muestral \emph{podría} limitar la precisión de
+las estimaciones en celdas de respuesta dispersa. Estas amenazas
+\emph{serán} tratadas explícitamente en las conclusiones, con indicación
+de su dirección probable —sesgo conservador o sesgo optimista— sobre los
+hallazgos.
+
+\textbf{Proyección.} En función de los resultados obtenidos, \emph{se
+formularán} recomendaciones de configuración operativa para redes
+interiores —escenario, carga y nivel de QoS recomendados por condición—,
+\emph{se propondrán} extensiones del diseño —incorporación de la
+densidad de nodos como cuarto factor, evaluación en banda de 5 GHz,
+incorporación de protocolos alternativos de transporte— y \emph{se
+definirá} la ruta para elevar el prototipo a un grado de madurez
+tecnológica superior mediante pruebas en instalaciones y condiciones de
+operación reales.
+
+\end{document}
